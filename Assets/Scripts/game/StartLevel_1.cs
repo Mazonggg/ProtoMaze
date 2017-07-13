@@ -12,7 +12,7 @@ public class StartLevel_1 : MonoBehaviour {
 		new Vector3 (0, -5, 0)
 	};
 	// Declares the time given to complete the level.
-	private static int timer = 120;
+	private static int timer = 2;
 	/// <summary>
 	/// Gets the start position for a specific index of player in UserHandler.
 	/// </summary>
@@ -25,7 +25,7 @@ public class StartLevel_1 : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		
-		GameObject.Find (Constants.softwareModel).GetComponent<SoftwareModel> ().CreateSocketObject (120);
+		GameObject.Find (Constants.softwareModel).GetComponent<SoftwareModel> ().CreateSocketObject (timer);
 	}
 	
 	// Update is called once per frame

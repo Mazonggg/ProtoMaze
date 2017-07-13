@@ -60,24 +60,23 @@ public class NetworkRoutines : MonoBehaviour {
 	/// <param name="param">Parameter.</param>
 	private IEnumerator MakeRequest(Action<string[][]> callback, string request) {
 		
-		Debug.Log ("MakeRequest: " + request);
+		// Debug.Log ("MakeRequest: " + request);
 		using (connection = UnityWebRequest.Get (request)) {
 			
 			yield return connection.Send ();
 
-			if (connection.isError) {
-				Debug.Log(serverError + connection.error);
-			}
-			else {
-				string response = connection.downloadHandler.text;
-				// Checks if the request responses with an error
-				if (response.StartsWith (serverError)) {
-					//Debug.Log (serverError + response);
+				if (connection.isError) {
+					Debug.Log (serverError + connection.error);
 				} else {
-					Debug.Log (serverResponse + response);
-                    callback (CompileResponse(response));
+					string response = connection.downloadHandler.text;
+					// Checks if the request responses with an error
+					if (response.StartsWith (serverError)) {
+						// Debug.Log (serverError + response);
+					} else {
+						Debug.Log (serverResponse + response);
+						callback (CompileResponse (response));
+					}
 				}
-			}
 		}
 	}
 

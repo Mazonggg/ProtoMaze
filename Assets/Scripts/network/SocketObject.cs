@@ -210,40 +210,34 @@ public class SocketObject {
 	/// <returns>The user data.</returns>
 	private string CollectUserData() {
 		
-		User thisUse = userController.ThisUser;
+		UpdateData userData = userController.ThisUser.UpdateData;
 
-		bool updated = thisUse.Updated;
-		if (updated) {
-			UpdateData userData = thisUse.UpdateData;
+		string msg = "t=";
+		if (userData.ObjectHeld == null) {
+			msg += "1";
+		} else {
+			msg += "2";
+		}
 
-			string msg = "t=";
-			if (userData.ObjectHeld == null) {
-				msg += "1";
-			} else {
-				msg += "2";
-			}
-
-			msg += "&ui=" + userData.Id;
-			msg += "&up=" +
+		msg += "&ui=" + userData.Id;
+		msg += "&up=" +
 			userData.Position.x + "_" +
 			userData.Position.y + "_" +
-				userData.Position.z + ";" +
+			userData.Position.z + ";" +
 			userData.Rotation.x + "_" +
 			userData.Rotation.y + "_" +
 			userData.Rotation.z;
 
-			if (userData.ObjectHeld != null) {
-				msg += "&oi=" + userData.ObjectHeld.Id;
-				msg += "&op=" +
-					userData.ObjectHeld.Position.x + "_" +
-					userData.ObjectHeld.Position.y + "_" +
-					userData.ObjectHeld.Position.z + ";" +
-					userData.ObjectHeld.Rotation.x + "_" +
-					userData.ObjectHeld.Rotation.y + "_" +
-					userData.ObjectHeld.Rotation.z;
-			}
-			return msg;
+		if (userData.ObjectHeld != null) {
+			msg += "&oi=" + userData.ObjectHeld.Id;
+			msg += "&op=" +
+				userData.ObjectHeld.Position.x + "_" +
+				userData.ObjectHeld.Position.y + "_" +
+				userData.ObjectHeld.Position.z + ";" +
+				userData.ObjectHeld.Rotation.x + "_" +
+				userData.ObjectHeld.Rotation.y + "_" +
+				userData.ObjectHeld.Rotation.z;
 		}
-		return "";
+		return msg;
 	}
 }

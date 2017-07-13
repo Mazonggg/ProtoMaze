@@ -62,13 +62,11 @@ public class CreateSession : MonoBehaviour {
     private IEnumerator UpdateLobby(){
 
         while (true) {
-			
 			string userSession = UserStatics.SessionId.ToString();
 			GameObject.Find(Constants.softwareModel).GetComponent<SoftwareModel>().netwRout.TCPRequest(
                 UpdateView,
                 new string[] { "req", "sessionId" },
                 new string[] { "getPlayerInSession", userSession });
-
 
             yield return new WaitForSeconds(1f);
         }
@@ -80,7 +78,6 @@ public class CreateSession : MonoBehaviour {
 	/// <param name="response">Response.</param>
 	private void UpdateView(string[][] response){
 		headline.text ="Wait for Players in Session " + UserStatics.SessionId.ToString();
-		//headline.text ="Wait for Players in Session " + GameObject.Find(Constants.softwareModel).GetComponent<SoftwareModel>().UserHandler.ThisUser.SsId.ToString();
         string ret = "";
         foreach (string[] pair in response){
 
@@ -100,6 +97,7 @@ public class CreateSession : MonoBehaviour {
 				} else if(usernames[i].Equals(Constants.noUser)) {
 					users [i].text = Constants.freeUser;
 					users [i].fontStyle = FontStyle.Normal;
+					users [i].color = Constants.defaultColor;
 				} else {
 					users [i].color = Constants.defaultColor;
 				}
