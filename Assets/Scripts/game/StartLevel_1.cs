@@ -6,10 +6,10 @@ public class StartLevel_1 : MonoBehaviour {
 
 	// Declares the stating positions of the users.
 	private static Vector3[] startPositions = {
-		new Vector3 (0, 0, 0),
-		new Vector3 (5, 0, 0),
-		new Vector3 (-5, 0, 0),
-		new Vector3 (0, -5, 0)
+		new Vector3 (0, 0.5f, 0),
+		new Vector3 (5, 0.5f, 0),
+		new Vector3 (-5, 0.5f, 0),
+		new Vector3 (0, 0.5f, -5)
 	};
 	// Declares the time given to complete the level.
 	private static int timer = 10;
