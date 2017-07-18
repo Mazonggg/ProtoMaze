@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class StartSession : MonoBehaviour {
 
-	public GameObject /*createSessionCanvas,*/ startSessionButton;
+	public GameObject /*createSessionCanvas,*/ startSessionButton, createSession;
 
     void Start () {
         //createSessionCanvas.SetActive(false);

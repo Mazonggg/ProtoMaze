@@ -45,26 +45,30 @@ public class NetworkRoutines : MonoBehaviour {
 	public void UDPRequest(Action<string[][]> callback, string[] keys, string[] values) {
 
 		string request = SerializeRequest (serverRequest + upstreamSocket, GenerateParams(keys, values));
-		StartCoroutine (MakeRequest(callback, request));
+		StartCoroutine (MakeRequest(callback, request, false));
 	}
 
 	public void TCPRequest(Action<string[][]> callback, string[] keys, string[] values) {
         
 		string request = SerializeRequest (serverRequest + connScript, GenerateParams(keys, values));
-		StartCoroutine (MakeRequest(callback, request));
+		StartCoroutine (MakeRequest(callback, request, true));
 	}
 	/// <summary>
 	/// Processes and returns all tcp-requests to server.
 	/// </summary>
 	/// <returns>The request.</returns>
 	/// <param name="param">Parameter.</param>
-	private IEnumerator MakeRequest(Action<string[][]> callback, string request) {
+	private IEnumerator MakeRequest(Action<string[][]> callback, string request, bool waitForResponse) {
 		
 		// Debug.Log ("MakeRequest: " + request);
 		using (connection = UnityWebRequest.Get (request)) {
-			
-			yield return connection.Send ();
 
+			if (!waitForResponse) {
+				connection.Send ();
+				yield return null;
+			} else {
+				yield return connection.Send ();
+			
 				if (connection.isError) {
 					Debug.Log (serverError + connection.error);
 				} else {
@@ -77,8 +81,10 @@ public class NetworkRoutines : MonoBehaviour {
 						callback (CompileResponse (response));
 					}
 				}
+			}
 		}
 	}
+
 
     /// <summary>
     /// Gets the type of the response, by extracting the respective part of it.

@@ -12,7 +12,7 @@ public class StartLevel_1 : MonoBehaviour {
 		new Vector3 (0, -5, 0)
 	};
 	// Declares the time given to complete the level.
-	private static int timer = 2;
+	private static int timer = 10;
 	/// <summary>
 	/// Gets the start position for a specific index of player in UserHandler.
 	/// </summary>

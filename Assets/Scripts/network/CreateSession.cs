@@ -10,10 +10,11 @@ public class CreateSession : MonoBehaviour {
     public Text user_a, user_b, user_c, user_d, headline;
     private Text[] users;
 
+	private IEnumerator updateLobby;
+
     void Start () {
         createSessionCanvas.SetActive(false);
         users = new Text[] { user_a, user_b, user_c, user_d };
-        
     }
 
     public void goBack() {
@@ -22,10 +23,14 @@ public class CreateSession : MonoBehaviour {
             new string[] { "req", "userId" },
             new string[] { "leaveSession", UserStatics.IdSelf.ToString() });
 
-
         mainMenuCanvas.SetActive(true);
         createSessionCanvas.SetActive(false);
     }
+
+	void OnDestroy() {
+		Debug.Log ("OnDestroy: CreateSession");
+		StopCoroutine (updateLobby);
+	}
 
     private void ResetUserInfo(string[][] response) {
 
@@ -61,15 +66,14 @@ public class CreateSession : MonoBehaviour {
 
     private IEnumerator UpdateLobby(){
 
-        while (true) {
-			string userSession = UserStatics.SessionId.ToString();
-			GameObject.Find(Constants.softwareModel).GetComponent<SoftwareModel>().netwRout.TCPRequest(
-                UpdateView,
-                new string[] { "req", "sessionId" },
-                new string[] { "getPlayerInSession", userSession });
-
-            yield return new WaitForSeconds(1f);
-        }
+		while (true) {
+			string userSession = UserStatics.SessionId.ToString ();
+			GameObject.Find (Constants.softwareModel).GetComponent<SoftwareModel> ().netwRout.TCPRequest (
+				UpdateView,
+				new string[] { "req", "sessionId" },
+				new string[] { "getPlayerInSession", userSession });
+			yield return new WaitForSeconds (1f);
+		}
     }
 
 	/// <summary>
@@ -77,8 +81,9 @@ public class CreateSession : MonoBehaviour {
 	/// </summary>
 	/// <param name="response">Response.</param>
 	private void UpdateView(string[][] response){
+		
 		headline.text ="Wait for Players in Session " + UserStatics.SessionId.ToString();
-        string ret = "";
+		string ret = "";
         foreach (string[] pair in response){
 
 			if (pair [0].Equals ("playerInSession")) {
@@ -102,15 +107,20 @@ public class CreateSession : MonoBehaviour {
 					users [i].color = Constants.defaultColor;
 				}
 			}
+
 			// Check if the session is ment to be started.
 			if (pair [0].Equals (Constants.sfState) && pair [1].Equals (Constants.sfStarting)) {
 				// Start the session.
 				gameObject.GetComponent<StartSession> ().LoadNewScene ();
 			}
-        }
+		}
     }
 
+	private float zeit = 0;
     public void StartUpdateLobby() {
-        StartCoroutine(UpdateLobby());
+		Debug.Log ("StartUpdateLobby(): " + (Time.realtimeSinceStartup - zeit));
+		zeit = Time.realtimeSinceStartup;
+		updateLobby = UpdateLobby ();
+		StartCoroutine(updateLobby);
     }
 }

@@ -10,7 +10,13 @@ public class MainMenu : MonoBehaviour {
 	public GameObject logInCanvas, mainMenuCanvas, createSessionCanvas, joinSessionCanvas;
     public GameObject joinSessionController;
 
+	/// <summary>
+	/// Called when object is "started",
+	/// Sets the timescale to realtime and hides this menu,
+	/// to correctly implement order of login etc. in game.
+	/// </summary>
 	void Start(){
+		Time.timeScale = 1f;
 		mainMenuCanvas.SetActive (false);
 	}
 		
