@@ -46,6 +46,15 @@ public class PauseMenu : MonoBehaviour {
 		TogglePause (false);
 	}
 
+	public void End(int time) {
+
+		resumeButton.SetActive (false);
+		if (time <= 0) {
+			
+		}
+		Pause ();
+	}
+
 	public void Quit() {
 
 		GameObject.Find(Constants.softwareModel).GetComponent<SoftwareModel>().netwRout.TCPRequest(

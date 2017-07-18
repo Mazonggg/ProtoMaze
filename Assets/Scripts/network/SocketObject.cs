@@ -200,6 +200,9 @@ public class SocketObject {
 				int time = 0;
 				int.TryParse (pair [1], out time);
 				timerScript.SetTimer (time);
+				if (time <= 0) {
+					pauseMenu.End (0);
+				}
 			}
 		}
 	}
