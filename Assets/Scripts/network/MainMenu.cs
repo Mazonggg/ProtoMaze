@@ -28,6 +28,7 @@ public class MainMenu : MonoBehaviour {
             HandleLogout, 
 			new string[] {"req", "userId"},
 			new string[] {"logoutUser", userId});
+		GameObject.Find ("ErrorText").GetComponent<ErrorText> ().ClearText ();
 	}
 
 	private void HandleLogout(string[][] response) {
@@ -40,7 +41,8 @@ public class MainMenu : MonoBehaviour {
 
 
 	public void JoinSession() {
-		
+
+		GameObject.Find ("ErrorText").GetComponent<ErrorText> ().ClearText ();
 		mainMenuCanvas.SetActive(false);
 		joinSessionCanvas.SetActive(true);
 
@@ -52,7 +54,8 @@ public class MainMenu : MonoBehaviour {
 	/// Sets up request to server, that creates the session
 	/// </summary>
 	public void CreateSession() {
-		
+
+		GameObject.Find ("ErrorText").GetComponent<ErrorText> ().ClearText ();
 		string userId = UserStatics.IdSelf.ToString();
 
 		GameObject.Find(Constants.softwareModel).GetComponent<SoftwareModel>().netwRout.TCPRequest(

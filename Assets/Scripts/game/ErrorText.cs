@@ -25,4 +25,9 @@ public class ErrorText : MonoBehaviour {
 			}
 		}
 	}
+
+	public void ClearText() {
+		show = false;
+		gameObject.GetComponent<Text> ().text = "";
+	}
 }

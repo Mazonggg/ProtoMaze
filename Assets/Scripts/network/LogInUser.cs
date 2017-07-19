@@ -22,6 +22,9 @@ public class LogInUser : MonoBehaviour {
 		string name = inputName.GetComponent<InputField>().text;
 		string pwd = GameObject.Find(Constants.softwareModel).GetComponent<SoftwareModel>().netwRout.Md5Sum(inputPwd.GetComponent<InputField> ().text);
 
+		inputName.GetComponent<InputField> ().text = "";
+		inputPwd.GetComponent<InputField> ().text = "";
+
 		GameObject.Find(Constants.softwareModel).GetComponent<SoftwareModel>().netwRout.TCPRequest(
 			HandleLogin, 
 			new string[] {"req", "userName", "pwd"},
