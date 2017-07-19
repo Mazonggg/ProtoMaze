@@ -8,13 +8,24 @@ using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour {
 	
-	public GameObject resumeButton, quitButton, pauseMenuCanvas;
+	public GameObject resumeButton, quitButton, pauseMenuCanvas, startMenuCanvas;
 	public GameObject debugText, timerText;
 
 	private bool gamePaused = false;
+	private bool gameHasStarted = false;
+	private bool startedBefore = false;
+	public bool GameHaseStarted {
+		get { return gameHasStarted; }
+		set { 
+			if (!startedBefore) {
+				gameHasStarted = true;
+				startedBefore = value;
+			}
+		}
+	}
 
 	void Start() {
-
+		
 		TogglePause (false);
 	}
 
@@ -30,29 +41,43 @@ public class PauseMenu : MonoBehaviour {
 		}
 	}
 
-	public void Pause() {
+	public void StartGame() {
+
 		GameObject.Find(Constants.softwareModel).GetComponent<SoftwareModel>().netwRout.TCPRequest(
 			NetworkRoutines.EmptyCallback,
 			new string[] { "req", "sessionId" },
-			new string[] { "pauseSession", UserStatics.SessionId.ToString() });
-		TogglePause (true);
+			new string[] { "startTheGame", UserStatics.SessionId.ToString() });
+	}
+		
+	public void Pause() {
+		if (gameHasStarted) {
+			GameObject.Find (Constants.softwareModel).GetComponent<SoftwareModel> ().netwRout.TCPRequest (
+				NetworkRoutines.EmptyCallback,
+				new string[] { "req", "sessionId" },
+				new string[] { "pauseSession", UserStatics.SessionId.ToString () });
+			TogglePause (true);
+		}
 	}
 
 	public void Resume() {
-		GameObject.Find(Constants.softwareModel).GetComponent<SoftwareModel>().netwRout.TCPRequest(
-			NetworkRoutines.EmptyCallback,
-			new string[] { "req", "sessionId" },
-			new string[] { "resumeSession", UserStatics.SessionId.ToString() });
-		TogglePause (false);
+		if (gameHasStarted) {
+			GameObject.Find (Constants.softwareModel).GetComponent<SoftwareModel> ().netwRout.TCPRequest (
+				NetworkRoutines.EmptyCallback,
+				new string[] { "req", "sessionId" },
+				new string[] { "resumeSession", UserStatics.SessionId.ToString () });
+			TogglePause (false);
+		}
 	}
 
 	public void End(int time) {
 
-		resumeButton.SetActive (false);
-		if (time <= 0) {
+		if (gameHasStarted) {
+			resumeButton.SetActive (false);
+			if (time <= 0) {
 			
+			}
+			Pause ();
 		}
-		Pause ();
 	}
 
 	public void Quit() {
@@ -71,9 +96,17 @@ public class PauseMenu : MonoBehaviour {
 	public void TogglePause(bool stop) {
 
 		pauseMenuCanvas.SetActive(stop);
+		startMenuCanvas.SetActive (false);
 		gamePaused = stop;
 
 		Time.timeScale = (stop ? 0f : 1f);
+	}
+
+	public void ShowStartingMenu() {
+
+		startMenuCanvas.SetActive (true);
+		pauseMenuCanvas.SetActive (false);
+		Time.timeScale = 0f;
 	}
 
 	// TODO dev. helper

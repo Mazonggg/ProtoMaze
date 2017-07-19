@@ -2,32 +2,38 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StartLevel_1 : MonoBehaviour {
+public class StartLevel_1 : LevelBehaviour {
 
 	// Declares the stating positions of the users.
-	private static Vector3[] startPositions = {
-		new Vector3 (0, 0.5f, 0),
-		new Vector3 (5, 0.5f, 0),
-		new Vector3 (-5, 0.5f, 0),
-		new Vector3 (0, 0.5f, -5)
-	};
-	// Declares the time given to complete the level.
-	private static int timer = 10;
-	/// <summary>
-	/// Gets the start position for a specific index of player in UserHandler.
-	/// </summary>
-	/// <returns>The start position.</returns>
-	/// <param name="index">Index.</param>
-	public static Vector3 GetStartPosition (int index) {
+	protected override Vector3 StartPositions (int index) {
+		Vector3[] arr = new Vector3[] {
+			new Vector3 (0, 0.5f, 0),
+			new Vector3 (5, 0.5f, 0),
+			new Vector3 (-5, 0.5f, 0),
+			new Vector3 (0, 0.5f, -5)
+		};
+		if (index < arr.Length) {
+			return arr [index];
+		} else {
+			return new Vector3();
+		}
+	}
 
-		return startPositions[index];
+	protected override void FinishLevel() {
+
 	}
-	// Use this for initialization
-	void Start () {
+
+	/// <summary>
+	/// Gets the timer, that determines how much time 
+	/// the user have to complete the level, before timeout.
+	/// </summary>
+	/// <returns>The timer.</returns>
+	protected override int GetTimer () {
 		
-		GameObject.Find (Constants.softwareModel).GetComponent<SoftwareModel> ().CreateSocketObject (timer);
+		return 10;
 	}
-	
+
+
 	// Update is called once per frame
 	void Update () {
 		

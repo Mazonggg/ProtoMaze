@@ -40,14 +40,13 @@ public class SocketObject {
 			GameObject.Find (Constants.softwareModel).GetComponent<SoftwareModel> ().netwRout.UDPRequest (
 				NetworkRoutines.EmptyCallback,
 				new string[] { "userId", "timer", "sessionId" }, 
-				new string[] { userId, timer.ToString(),  sessionId});
-
+				new string[] { userId, timer.ToString (),  sessionId });
 		}
 
-		GameObject.Find(Constants.softwareModel).GetComponent<SoftwareModel>().netwRout.TCPRequest (
+		GameObject.Find (Constants.softwareModel).GetComponent<SoftwareModel> ().netwRout.TCPRequest (
 			HandleSessionStart,
-			new string[] {"req", "sessionId"}, 
-			new string[] {"startSession", sessionId});
+			new string[] { "req", "sessionId", "userId" }, 
+			new string[] { "startSession", sessionId, userId });
 
 		userController = GameObject.Find (Constants.softwareModel).GetComponent<SoftwareModel> ().userController;
 		pauseMenu = GameObject.Find ("PauseMenuController").GetComponent<PauseMenu> ();
@@ -194,7 +193,14 @@ public class SocketObject {
 				} else if (pair [1].Equals (Constants.sfRunning)) {
 					// LOGIC TO RESUME THE GAME.
 					pauseMenu.TogglePause (false);
-				}
+					// Checks if game was started before and acts accordingly to start it.
+					if (!pauseMenu.GameHaseStarted) {
+						pauseMenu.GameHaseStarted = true;
+					}
+				} else if (pair [1].Equals (Constants.sfStarting)) {
+					// LOGIC TO SHOW STARTING MENU.
+					pauseMenu.ShowStartingMenu ();
+				} 
 				pauseMenu.ShowState (pair [1]);
 			} else if(pair[0].Equals (Constants.sfTimer)) {
 				int time = 0;

@@ -8,7 +8,7 @@ using UnityEngine;
 /// </summary>
 public class UserController: MonoBehaviour {
 
-	public GameObject userPrefab;
+	public GameObject userPrefab, softwareModel;
 
 	private List<User> users = new List<User>();
 	public User ThisUser {
@@ -53,7 +53,7 @@ public class UserController: MonoBehaviour {
 		if (users.Count < 4) {
 			GameObject usr = GameObject.Instantiate(
 				userPrefab, 
-				StartLevel_1.GetStartPosition(users.Count), 
+				softwareModel.GetComponent<LevelBehaviour>().GetStartPosition(users.Count), 
 				Quaternion.Euler(0, 0, 0), 
 				gameObject.transform);
 			users.Add (usr.GetComponent<User> ());
