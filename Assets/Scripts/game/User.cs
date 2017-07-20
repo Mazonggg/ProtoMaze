@@ -8,6 +8,7 @@ using UnityEngine;
 public class User : GObject {
 
 	public GameObject userInfo;
+	private Animator animator;
 
 	private bool isPlayed = false;
 	public bool IsPlayed {
@@ -41,6 +42,18 @@ public class User : GObject {
 	}
 
 	/// <summary>
+	/// Counts the currently "empty" updates.
+	/// </summary>
+	private byte standCounter = 0;
+	/// <summary>
+	/// Current limit for "empty" updates depending on "streak" of valid updates.
+	/// </summary>
+	private byte standLimit = 0;
+	/// <summary>
+	/// Predifined max for "empty" updates before transitioning to idle animation.
+	/// </summary>
+	private byte standMax = 3;
+	/// <summary>
 	/// Returns the relevant data for updating the server, for this object.
 	/// </summary>
 	/// <value>The update data.</value>
@@ -61,16 +74,42 @@ public class User : GObject {
 			}
 		}
 		set {
-			transform.position = value.Position;
-			transform.rotation = Quaternion.Euler (value.Rotation.x, value.Rotation.y, value.Rotation.z);
+			Debug.Log("x=" + (transform.position.x - value.Position.x) + " / y=" + (transform.position.y - value.Position.y) + " / z=" + (transform.position.z - value.Position.z));
+			if (transform.position.x != value.Position.x || transform.position.y != value.Position.y || transform.position.z != value.Position.z) {
+				transform.position = value.Position;
+				animator.SetFloat ("Forward", 1f);
+				standCounter = 0;
+				if (standLimit < standMax) {
+					standLimit++;
+				} else {
+					animator.SetBool ("QuickTrans", false);
+				}
+			} else {
+				if (standCounter >= standLimit) {
+					animator.SetFloat ("Forward", 0f);
+					standCounter = 0;
+					standLimit = 0;
+					animator.SetBool ("QuickTrans", true);
+				} else {
+					standCounter++;
+				}
+			}
+			//transform.rotation = Quaternion.Euler (value.Rotation.x, value.Rotation.y, value.Rotation.z);
 		}
 	}
 
-	void FixedUpdate(){
-		
-		if (isPlayed && (Input.GetAxis ("Horizontal") != 0 || Input.GetAxis ("Vertical") != 0)) {
-			Vector3 dir = new Vector3 (Input.GetAxis ("Horizontal"), 0,Input.GetAxis ("Vertical"));
-			Move (dir, Constants.moveSpeed);
+	void Start() {
+		animator = GetComponent<Animator> ();
+	}
+
+	void Update(){
+
+		if (isPlayed) {
+			if ((Input.GetAxis ("Horizontal") != 0 || Input.GetAxis ("Vertical") != 0)) {
+				Vector3 dir = new Vector3 (Input.GetAxis ("Horizontal"), 0, Input.GetAxis ("Vertical"));
+				Move (dir, Constants.moveSpeed);
+			} 
+			animator.SetFloat ("Forward", Input.GetAxis ("Vertical"));
 		}
 	}
 }

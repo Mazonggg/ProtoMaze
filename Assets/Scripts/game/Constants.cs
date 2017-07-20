@@ -11,7 +11,8 @@ public sealed class Constants {
 	public static Color secondaryColor = new Color (0.9f, 0.5f, 0.25f);
 	public static Color defaultColor = new Color (0.0f, 0.0f, 0.0f);
 	// Movement speed of Users.
-	public static float moveSpeed = 10f;
+	public static float moveSpeed = 6f;
+	public static float runSpeed = 12f;
 	public static string softwareModel = "SoftwareModel";
 	public static string noUser = "noUser";
 	public static string freeUser = "free";

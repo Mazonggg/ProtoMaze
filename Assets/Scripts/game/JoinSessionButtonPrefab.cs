@@ -30,18 +30,6 @@ public class JoinSessionButtonPrefab : MonoBehaviour {
             new string[] { "joinSession", sessionIDText.text, userId });
     }
 
-	/// <summary>
-	/// Changes the color of the field.
-	/// </summary>
-	/// <param name="color">Color.</param>
-	public void ChangeColor() {
-
-		ColorBlock colors = joinSessionButton.colors;
-		colors.normalColor = new Color (0.8f, 0.9f, 1f);
-		joinSessionButton.colors = colors;
-	}
-
-
     public void SetSessionIdAndGoToLobby(string[][] response) {
 
         int SsIdTmp = -1;

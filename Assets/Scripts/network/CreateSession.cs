@@ -95,6 +95,7 @@ public class CreateSession : MonoBehaviour {
 
 			for (int i = 0; i < usernames.Length; i++) {
 
+				Debug.Log ("UpdateView: UserStatics.GetUserName (UserStatics.IdSelf)=" + UserStatics.GetUserName (UserStatics.IdSelf));
 				users [i].text = usernames [i];
 				users [i].fontStyle = FontStyle.Bold;
 				if (UserStatics.GetUserName (UserStatics.IdSelf).Equals (usernames [i])) {

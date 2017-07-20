@@ -30,7 +30,7 @@ public class StartLevel_1 : LevelBehaviour {
 	/// <returns>The timer.</returns>
 	protected override int GetTimer () {
 		
-		return 10;
+		return 30;
 	}
 
 
