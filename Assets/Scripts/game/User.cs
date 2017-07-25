@@ -111,9 +111,9 @@ public class User : GObject {
 			if ((Input.GetAxis ("Horizontal") != 0 || Input.GetAxis ("Vertical") != 0)) {
 				float angle = transform.localRotation.eulerAngles.y;
 				Vector3 hor = new Vector3(
-					Mathf.Cos ((90 - angle) * Mathf.PI / 180f) * Input.GetAxis ("Horizontal"),
+					Mathf.Cos ((0 - angle) * Mathf.PI / 180f) * Input.GetAxis ("Horizontal"),
 					0,
-					Mathf.Sin ((90 - angle) * Mathf.PI / 180f) * Input.GetAxis ("Horizontal"));
+					Mathf.Sin ((0 - angle) * Mathf.PI / 180f) * Input.GetAxis ("Horizontal"));
 				Vector3 ver = new Vector3(
 					Mathf.Sin (angle * Mathf.PI / 180f) * Input.GetAxis ("Vertical"),
 					0, 
