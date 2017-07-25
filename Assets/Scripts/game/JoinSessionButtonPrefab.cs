@@ -8,7 +8,7 @@ public class JoinSessionButtonPrefab : MonoBehaviour {
     public Button joinSessionButton;
     public Text sessionIDText;
     public Text leaderText;
-    public GameObject joinSessionCanvas, createSessionCanvas;
+    public GameObject joinSessionCanvas, joinSessionController, createSessionCanvas;
 
 
 	// Use this for initialization
@@ -35,13 +35,12 @@ public class JoinSessionButtonPrefab : MonoBehaviour {
         int SsIdTmp = -1;
 
         foreach (string[] pair in response) {
+			// When ERROR on server is caught, refresh the list, instead of joining.
+			if (pair[0].Equals("type") && pair[1].Equals(Constants.sfError)) {
 
-			/*if (pair[0].Equals("type") && pair[1].Equals(Constants.sfHint)) {
-
-                Debug.Log("User already assigned to a session or Session does not exist!");
+				joinSessionController.GetComponent<JoinSession> ().RefreshSessions ();
                 return;
-            }*/
-            if (pair[0].Equals("sessionId")) {
+            } else if (pair[0].Equals("sessionId")) {
                 int.TryParse(pair[1], out SsIdTmp);
 				UserStatics.SessionId = SsIdTmp;
 
