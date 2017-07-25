@@ -63,8 +63,8 @@ public class User : GObject {
 			if (objectHeld == null) {
 				return new UpdateData (
 					Id, 
-					new Vector3 (transform.position.x, transform.position.y, transform.position.z), 
-					new Vector3 (transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z)); 
+					new Vector3(transform.position.x,transform.position.y,transform.position.z), 
+					new Vector3(transform.rotation.x,transform.rotation.y,transform.rotation.z)); 
 			} else {
 				return new UpdateData (
 					Id, 
@@ -73,28 +73,29 @@ public class User : GObject {
 					objectHeld.UpdateData); 
 			}
 		}
-		set {
-			Debug.Log("x=" + (transform.position.x - value.Position.x) + " / y=" + (transform.position.y - value.Position.y) + " / z=" + (transform.position.z - value.Position.z));
-			if (transform.position.x != value.Position.x || transform.position.y != value.Position.y || transform.position.z != value.Position.z) {
-				transform.position = value.Position;
-				animator.SetFloat ("Forward", 1f);
-				standCounter = 0;
-				if (standLimit < standMax) {
-					standLimit++;
-				} else {
-					animator.SetBool ("QuickTrans", false);
-				}
+	}
+
+	public void UpdateUser(UpdateData upData) {
+
+		Debug.Log("x=" + (transform.position.x - upData.Position.x) + " / y=" + (transform.position.y - upData.Position.y) + " / z=" + (transform.position.z - upData.Position.z));
+		if (transform.position.x != upData.Position.x || transform.position.y != upData.Position.y || transform.position.z != upData.Position.z) {
+			transform.position = upData.Position;
+			animator.SetFloat ("Forward", 1f);
+			standCounter = 0;
+			if (standLimit < standMax) {
+				standLimit++;
 			} else {
-				if (standCounter >= standLimit) {
-					animator.SetFloat ("Forward", 0f);
-					standCounter = 0;
-					standLimit = 0;
-					animator.SetBool ("QuickTrans", true);
-				} else {
-					standCounter++;
-				}
+				animator.SetBool ("QuickTrans", false);
 			}
-			//transform.rotation = Quaternion.Euler (value.Rotation.x, value.Rotation.y, value.Rotation.z);
+		} else {
+			if (standCounter >= standLimit) {
+				animator.SetFloat ("Forward", 0f);
+				standCounter = 0;
+				standLimit = 0;
+				animator.SetBool ("QuickTrans", true);
+			} else {
+				standCounter++;
+			}
 		}
 	}
 

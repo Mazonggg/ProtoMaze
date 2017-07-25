@@ -27,21 +27,16 @@ public class SocketObject {
 	private TimerScript timerScript;
 	private PauseMenu pauseMenu;
 
+	private int levelTimer = 0;
+
 	public SocketObject(int timer){
-		
+
+		levelTimer = timer;
 		// Create the socket, that communicates with server.
 		socket = new Socket (AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 
 		string userId = UserStatics.GetUserId(0).ToString();
 		string sessionId = UserStatics.SessionId.ToString();
-
-		if (UserStatics.IsCreater) {
-			
-			GameObject.Find (Constants.softwareModel).GetComponent<SoftwareModel> ().netwRout.UDPRequest (
-				NetworkRoutines.EmptyCallback,
-				new string[] { "userId", "timer", "sessionId" }, 
-				new string[] { userId, timer.ToString (),  sessionId });
-		}
 
 		GameObject.Find (Constants.softwareModel).GetComponent<SoftwareModel> ().netwRout.TCPRequest (
 			HandleSessionStart,
@@ -57,6 +52,7 @@ public class SocketObject {
 
 	/// <summary>
 	/// Handles the session start. Assigns the other users in the game-session to the respective GameObjects.
+	/// Starts socket, if necessary.
 	/// </summary>
 	/// <param name="response">Response.</param>
 	private void HandleSessionStart(string[][] response) {
@@ -66,7 +62,18 @@ public class SocketObject {
 		string user_name = "";
 
 		foreach (string[] pair in response) {
-			if (pair[0].Equals ("ur")) {
+			// Check, if session is already in starting state, oder running, otherwise start it.
+			if(pair[0].Equals("state") && (!pair[1].Equals(Constants.sfStarting) || !pair[1].Equals(Constants.sfRunning))) {
+
+				string userId = UserStatics.GetUserId(0).ToString();
+				string sessionId = UserStatics.SessionId.ToString();
+
+				Debug.Log ("HandleSessionStart: UPDRequest send");
+				GameObject.Find (Constants.softwareModel).GetComponent<SoftwareModel> ().netwRout.UDPRequest (
+					NetworkRoutines.EmptyCallback,
+					new string[] { "userId", "timer", "sessionId" }, 
+					new string[] { userId, levelTimer.ToString (),  sessionId });
+			} else if (pair[0].Equals ("ur")) {
 					user_ref= pair[1]; 
 			} else if (pair[0].Equals ("ui")) {
 				int.TryParse(pair[1], out user_id);
@@ -155,7 +162,7 @@ public class SocketObject {
 	private void ProcessDownBuf(byte[] buf) {
 
 		string bufString = System.Text.ASCIIEncoding.ASCII.GetString (buf);
-		//Debug.Log ("ProcessDownBuf: " + bufString);
+		Debug.Log ("ProcessDownBuf: " + bufString);
 		string[] pairs = bufString.Split('&');
 
 		for (int i = 0; i < pairs.Length; i++) {

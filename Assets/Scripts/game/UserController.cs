@@ -73,7 +73,7 @@ public class UserController: MonoBehaviour {
 
 		for (int i = 0; i < users.Count; i++) {
 			if (UserStatics.GetUserId (i) == user_update.Id) {
-				users [i].UpdateData = user_update;
+				users [i].UpdateUser(user_update);
 			}
 		}
 	}

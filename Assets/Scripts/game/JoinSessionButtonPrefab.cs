@@ -23,7 +23,7 @@ public class JoinSessionButtonPrefab : MonoBehaviour {
 
 
     public void MakeRequest() {
-		string userId = UserStatics.GetUserId(0).ToString();
+		string userId = UserStatics.IdSelf.ToString();
 		GameObject.Find(Constants.softwareModel).GetComponent<SoftwareModel>().netwRout.TCPRequest(
             SetSessionIdAndGoToLobby,
             new string[] { "req", "sessionId", "userId" },
