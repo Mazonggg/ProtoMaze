@@ -63,13 +63,13 @@ public class User : GObject {
 			if (objectHeld == null) {
 				return new UpdateData (
 					Id, 
-					new Vector3(transform.position.x,transform.position.y,transform.position.z), 
-					new Vector3(transform.rotation.x,transform.rotation.y,transform.rotation.z)); 
+					new Vector3 (transform.position.x,transform.position.y,transform.position.z), 
+					new Vector3 (transform.localRotation.eulerAngles.x, transform.localRotation.eulerAngles.y, transform.localRotation.eulerAngles.z)); 
 			} else {
 				return new UpdateData (
 					Id, 
 					new Vector3 (transform.position.x, transform.position.y, transform.position.z), 
-					new Vector3 (transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z),
+					new Vector3 (transform.localRotation.eulerAngles.x, transform.localRotation.eulerAngles.y, transform.localRotation.eulerAngles.z),
 					objectHeld.UpdateData); 
 			}
 		}
@@ -77,7 +77,7 @@ public class User : GObject {
 
 	public void UpdateUser(UpdateData upData) {
 
-		Debug.Log("x=" + (transform.position.x - upData.Position.x) + " / y=" + (transform.position.y - upData.Position.y) + " / z=" + (transform.position.z - upData.Position.z));
+		//Debug.Log("x=" + (transform.position.x - upData.Position.x) + " / y=" + (transform.position.y - upData.Position.y) + " / z=" + (transform.position.z - upData.Position.z));
 		if (transform.position.x != upData.Position.x || transform.position.y != upData.Position.y || transform.position.z != upData.Position.z) {
 			transform.position = upData.Position;
 			animator.SetFloat ("Forward", 1f);
@@ -97,6 +97,7 @@ public class User : GObject {
 				standCounter++;
 			}
 		}
+		transform.localRotation = Quaternion.Euler (upData.Rotation);
 	}
 
 	void Start() {
@@ -105,12 +106,15 @@ public class User : GObject {
 
 	void Update(){
 
-		if (isPlayed) {
+		if (isPlayed && SoftwareModel.GameRunning) {
+			// Capture movement:
 			if ((Input.GetAxis ("Horizontal") != 0 || Input.GetAxis ("Vertical") != 0)) {
 				Vector3 dir = new Vector3 (Input.GetAxis ("Horizontal"), 0, Input.GetAxis ("Vertical"));
 				Move (dir, Constants.moveSpeed);
 			} 
 			animator.SetFloat ("Forward", Input.GetAxis ("Vertical"));
+			// Capture rotation:
+			Rotate (Input.GetAxisRaw("Mouse X"), Constants.rotationFactor);
 		}
 	}
 }

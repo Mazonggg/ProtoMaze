@@ -13,7 +13,11 @@ public sealed class Constants {
 	// Movement speed of Users.
 	public static float moveSpeed = 6f;
 	public static float runSpeed = 12f;
-	public static string softwareModel = "SoftwareModel";
+	/// <summary>
+	/// The factor for rotation speed.
+	/// </summary>
+	public static float rotationFactor = 5f;
+	//public static string softwareModel = "SoftwareModel";
 	public static string noUser = "noUser";
 	public static string freeUser = "free";
 

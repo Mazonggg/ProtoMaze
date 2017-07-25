@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 using System;
 
-public class MainMenu : MonoBehaviour {
+public class MainMenu : SoftwareBehaviour {
 
 	public GameObject logInCanvas, mainMenuCanvas, createSessionCanvas, joinSessionCanvas;
     public GameObject joinSessionController;
@@ -16,7 +16,6 @@ public class MainMenu : MonoBehaviour {
 	/// to correctly implement order of login etc. in game.
 	/// </summary>
 	void Start(){
-		Time.timeScale = 1f;
 		mainMenuCanvas.SetActive (false);
 	}
 		
@@ -24,7 +23,7 @@ public class MainMenu : MonoBehaviour {
 
 		string userId = UserStatics.IdSelf.ToString();
 
-		GameObject.Find(Constants.softwareModel).GetComponent<SoftwareModel>().netwRout.TCPRequest(
+		SoftwareModel.netwRout.TCPRequest(
             HandleLogout, 
 			new string[] {"req", "userId"},
 			new string[] {"logoutUser", userId});
@@ -58,7 +57,7 @@ public class MainMenu : MonoBehaviour {
 		GameObject.Find ("ErrorText").GetComponent<ErrorText> ().ClearText ();
 		string userId = UserStatics.IdSelf.ToString();
 
-		GameObject.Find(Constants.softwareModel).GetComponent<SoftwareModel>().netwRout.TCPRequest(
+		SoftwareModel.netwRout.TCPRequest(
 			createSessionCanvas.GetComponentInChildren<CreateSession>().AssignSessionToUser, 
 			new string[] {"req", "userId"},
 			new string[] {"createSession", userId});

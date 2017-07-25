@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class StartSession : MonoBehaviour {
+public class StartSession : SoftwareBehaviour {
 
 	public GameObject startSessionButton, createSession;
 

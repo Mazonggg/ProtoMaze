@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class JoinSessionButtonPrefab : MonoBehaviour {
+public class JoinSessionButtonPrefab : SoftwareBehaviour {
 
     public Button joinSessionButton;
     public Text sessionIDText;
@@ -24,7 +24,7 @@ public class JoinSessionButtonPrefab : MonoBehaviour {
 
     public void MakeRequest() {
 		string userId = UserStatics.IdSelf.ToString();
-		GameObject.Find(Constants.softwareModel).GetComponent<SoftwareModel>().netwRout.TCPRequest(
+		SoftwareModel.netwRout.TCPRequest(
             SetSessionIdAndGoToLobby,
             new string[] { "req", "sessionId", "userId" },
             new string[] { "joinSession", sessionIDText.text, userId });

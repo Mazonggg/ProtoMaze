@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using System.Text.RegularExpressions;
 
 
-public class JoinSession : MonoBehaviour {
+public class JoinSession : SoftwareBehaviour {
 
     public GameObject logInCanvas, mainMenuCanvas, JoinSessionCanvas, backButton;
     public GameObject JoinButton;
@@ -64,7 +64,7 @@ public class JoinSession : MonoBehaviour {
 
     public void GetSessions() {
 		
-		GameObject.Find(Constants.softwareModel).GetComponent<SoftwareModel>().netwRout.TCPRequest(
+		SoftwareModel.netwRout.TCPRequest(
             ListAllSessions,
             new string[] { "req", "userId" },
 			new string[] { "getSessions", UserStatics.IdSelf.ToString() });

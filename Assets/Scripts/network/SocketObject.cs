@@ -11,7 +11,7 @@ using System.Net.Sockets;
 /// <summary>
 /// Handles all UDP communication with the server, while a session is RUNNING, PAUSED or ISSTARTING.
 /// </summary>
-public class SocketObject {
+public class SocketObject: SoftwareBehaviour {
 
 	private static string serverError = "Error";
 
@@ -38,12 +38,12 @@ public class SocketObject {
 		string userId = UserStatics.GetUserId(0).ToString();
 		string sessionId = UserStatics.SessionId.ToString();
 
-		GameObject.Find (Constants.softwareModel).GetComponent<SoftwareModel> ().netwRout.TCPRequest (
+		SoftwareModel.netwRout.TCPRequest (
 			HandleSessionStart,
 			new string[] { "req", "sessionId", "userId" }, 
 			new string[] { "startSession", sessionId, userId });
 
-		userController = GameObject.Find (Constants.softwareModel).GetComponent<SoftwareModel> ().userController;
+		userController = SoftwareModel.userController;
 		pauseMenu = GameObject.Find ("PauseMenuController").GetComponent<PauseMenu> ();
 		timerScript = GameObject.Find ("TimerText").GetComponent<TimerScript> ();
 
@@ -68,8 +68,7 @@ public class SocketObject {
 				string userId = UserStatics.GetUserId(0).ToString();
 				string sessionId = UserStatics.SessionId.ToString();
 
-				Debug.Log ("HandleSessionStart: UPDRequest send");
-				GameObject.Find (Constants.softwareModel).GetComponent<SoftwareModel> ().netwRout.UDPRequest (
+				SoftwareModel.netwRout.UDPRequest (
 					NetworkRoutines.EmptyCallback,
 					new string[] { "userId", "timer", "sessionId" }, 
 					new string[] { userId, levelTimer.ToString (),  sessionId });
@@ -90,8 +89,8 @@ public class SocketObject {
 	/// </summary>
 	private void WorkOnSocket(){
 		
-		GameObject.Find(Constants.softwareModel).GetComponent<SoftwareModel>().StartCoroutine (TellSocket());
-		GameObject.Find(Constants.softwareModel).GetComponent<SoftwareModel>().StartCoroutine (ListenToSocket());
+		SoftwareModel.StartCoroutine (TellSocket());
+		SoftwareModel.StartCoroutine (ListenToSocket());
     }
 
 	// storage for upstream data.
@@ -127,6 +126,7 @@ public class SocketObject {
 	private void SendDatagram() {
 		
 		string info = CollectUserData ();
+		// Debug.Log ("SendDatagram: " + info);
 		sendBuf = System.Text.ASCIIEncoding.ASCII.GetBytes (info);
 		sendBytes = socket.SendTo (sendBuf, endPoint);
 	}
@@ -162,7 +162,7 @@ public class SocketObject {
 	private void ProcessDownBuf(byte[] buf) {
 
 		string bufString = System.Text.ASCIIEncoding.ASCII.GetString (buf);
-		Debug.Log ("ProcessDownBuf: " + bufString);
+		// Debug.Log ("ProcessDownBuf: " + bufString);
 		string[] pairs = bufString.Split('&');
 
 		for (int i = 0; i < pairs.Length; i++) {
@@ -187,9 +187,11 @@ public class SocketObject {
 				float rotY = 999;
 				float rotZ = 999;
 
-				float.TryParse (pos [0], out rotX);
-				float.TryParse (pos [1], out rotY);
-				float.TryParse (pos [2], out rotZ);
+				float.TryParse (rot [0], out rotX);
+				float.TryParse (rot [1], out rotY);
+				float.TryParse (rot [2], out rotZ);
+
+				Debug.Log ("pos=" + posX + " / " + posY + " / " + posZ + "   /   rot=" + rotX + " / " + rotY + " / " + rotZ);
 
 				userController.UpdateUser(new UpdateData(user_id, new Vector3(posX, posY, posZ), new Vector3(rotX, rotY, rotZ)));
 			} else if (pair [0].Equals (Constants.sfState)) {
@@ -201,8 +203,8 @@ public class SocketObject {
 					// LOGIC TO RESUME THE GAME.
 					pauseMenu.TogglePause (false);
 					// Checks if game was started before and acts accordingly to start it.
-					if (!pauseMenu.GameHaseStarted) {
-						pauseMenu.GameHaseStarted = true;
+					if (!pauseMenu.GameHasStarted) {
+						pauseMenu.GameHasStarted = true;
 					}
 				} else if (pair [1].Equals (Constants.sfStarting)) {
 					// LOGIC TO SHOW STARTING MENU.

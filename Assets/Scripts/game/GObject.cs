@@ -6,7 +6,7 @@ using UnityEngine;
 /// <summary>
 /// Base-object for every movable object in a level.
 /// </summary>
-public class GObject : MonoBehaviour {
+public class GObject : SoftwareBehaviour {
 
 	private BoxCollider boxCollider;
 	/// <summary>
@@ -79,4 +79,18 @@ public class GObject : MonoBehaviour {
 		updated = true;
 	}
 
+	/// <summary>
+	/// Rotate the user according to mouseRotation.
+	/// </summary>
+	/// <param name="mouseRotation">Mouse rotation.</param>
+	protected void Rotate(float mouseRotation, float rotationFactor) {
+
+		if (Time.timeScale != 0) {
+			Vector3 localRot = transform.localRotation.eulerAngles;
+			//localRot.x += mouseRotation.y * rotationFactor;
+			localRot.y += mouseRotation * rotationFactor;
+			transform.localRotation = Quaternion.Euler (localRot);
+			updated = true;
+		}
+	}
 }

@@ -6,7 +6,7 @@ using UnityEngine;
 /// Controls the users in direct relation to the unity-engine.
 /// Handles creation of GameObjects representing the users in a game-session.
 /// </summary>
-public class UserController: MonoBehaviour {
+public class UserController: SoftwareBehaviour {
 
 	public GameObject userPrefab, softwareModel;
 

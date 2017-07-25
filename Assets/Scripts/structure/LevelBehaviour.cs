@@ -6,7 +6,7 @@ using UnityEngine;
 /// Declares behaviour of every Level, so that the rest 
 /// of the software has fixed reference points for interacting.
 /// </summary>
-public abstract class LevelBehaviour : MonoBehaviour {
+public abstract class LevelBehaviour : SoftwareBehaviour {
 
 	/// <summary>
 	/// Gets the timer, that determines how much time 
@@ -40,6 +40,6 @@ public abstract class LevelBehaviour : MonoBehaviour {
 	/// </summary>
 	void Start () {
 
-		GameObject.Find (Constants.softwareModel).GetComponent<SoftwareModel> ().CreateSocketObject (GetTimer());
+		SoftwareModel.CreateSocketObject (GetTimer());
 	}
 }

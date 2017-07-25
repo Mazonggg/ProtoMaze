@@ -6,15 +6,24 @@ using UnityEngine.Networking;
 
 using UnityEngine.SceneManagement;
 
-public class PauseMenu : MonoBehaviour {
+public class PauseMenu : SoftwareBehaviour {
 	
 	public GameObject resumeButton, quitButton, pauseMenuCanvas, startMenuCanvas;
 	public GameObject debugText, timerText;
 
 	private bool gamePaused = false;
+	private bool GamePaused {
+		set {
+			gamePaused = value;
+			SoftwareModel.GameRunning = !gamePaused && GameHasStarted;
+		}
+	}
+/*	public bool GameIsPaused {
+		get { return gamePaused && gameHasStarted; }
+	}*/
 	private bool gameHasStarted = false;
 	private bool startedBefore = false;
-	public bool GameHaseStarted {
+	public bool GameHasStarted {
 		get { return gameHasStarted; }
 		set { 
 			if (!startedBefore) {
@@ -25,7 +34,7 @@ public class PauseMenu : MonoBehaviour {
 	}
 
 	void Start() {
-		
+
 		TogglePause (false);
 	}
 
@@ -43,7 +52,7 @@ public class PauseMenu : MonoBehaviour {
 
 	public void StartGame() {
 
-		GameObject.Find(Constants.softwareModel).GetComponent<SoftwareModel>().netwRout.TCPRequest(
+		SoftwareModel.netwRout.TCPRequest(
 			NetworkRoutines.EmptyCallback,
 			new string[] { "req", "sessionId" },
 			new string[] { "startTheGame", UserStatics.SessionId.ToString() });
@@ -51,7 +60,7 @@ public class PauseMenu : MonoBehaviour {
 		
 	public void Pause() {
 		if (gameHasStarted) {
-			GameObject.Find (Constants.softwareModel).GetComponent<SoftwareModel> ().netwRout.TCPRequest (
+			SoftwareModel.netwRout.TCPRequest (
 				NetworkRoutines.EmptyCallback,
 				new string[] { "req", "sessionId" },
 				new string[] { "pauseSession", UserStatics.SessionId.ToString () });
@@ -61,7 +70,7 @@ public class PauseMenu : MonoBehaviour {
 
 	public void Resume() {
 		if (gameHasStarted) {
-			GameObject.Find (Constants.softwareModel).GetComponent<SoftwareModel> ().netwRout.TCPRequest (
+			SoftwareModel.netwRout.TCPRequest (
 				NetworkRoutines.EmptyCallback,
 				new string[] { "req", "sessionId" },
 				new string[] { "resumeSession", UserStatics.SessionId.ToString () });
@@ -82,7 +91,7 @@ public class PauseMenu : MonoBehaviour {
 
 	public void Quit() {
 
-		GameObject.Find(Constants.softwareModel).GetComponent<SoftwareModel>().netwRout.TCPRequest(
+		SoftwareModel.netwRout.TCPRequest(
 			StartMainMenu,
 			new string[] { "req", "userId" },
 			new string[] { "leaveSession", UserStatics.IdSelf.ToString() });
@@ -97,7 +106,7 @@ public class PauseMenu : MonoBehaviour {
 
 		pauseMenuCanvas.SetActive(stop);
 		startMenuCanvas.SetActive (false);
-		gamePaused = stop;
+		GamePaused = stop;
 
 		Time.timeScale = (stop ? 0f : 1f);
 	}

@@ -9,7 +9,7 @@ using System.IO;
 /// Represents the interface between the unity-game and the functional model of the Software in itself.
 /// Establishes Connection to server.
 /// </summary>
-public class SoftwareModel : MonoBehaviour {
+public class SoftwareModel : SoftwareBehaviour {
 
 	public UserController userController;
 	public NetworkRoutines netwRout;
@@ -19,6 +19,12 @@ public class SoftwareModel : MonoBehaviour {
 	public SocketObject SocketObj {
 		get { return socketObj; }
 		set { socketObj = value; }
+	}
+
+	private bool gameRunning = false;
+	public bool GameRunning {
+		get { return gameRunning; }
+		set { gameRunning = value; }
 	}
 		
 	public void PlaceUser() {

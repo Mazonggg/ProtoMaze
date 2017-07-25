@@ -10,7 +10,7 @@ using System;
 /// Contains function Md5Sum() from 'http://wiki.unity3d.com/index.php?title=MD5 opened on: 2017_04_26'.
 /// Convention for responses:
 /// response: "type=HINT&userId=5&userName=Protofox";
-public class NetworkRoutines : MonoBehaviour {
+public class NetworkRoutines : SoftwareBehaviour {
 
 	private static string serverError = "Error:";
 	private static string serverResponse = "Response:";
@@ -70,14 +70,14 @@ public class NetworkRoutines : MonoBehaviour {
 				yield return connection.Send ();
 			
 				if (connection.isError) {
-					Debug.Log (serverError + connection.error);
+					// Debug.Log (serverError + connection.error);
 				} else {
 					string response = connection.downloadHandler.text;
 					// Checks if the request responses with an error
 					if (response.StartsWith (serverError)) {
-						// Debug.Log (serverError + response);
+						 Debug.Log (serverError + response);
 					} else {
-						Debug.Log (serverResponse + response);
+						// Debug.Log (serverResponse + response);
 						callback (CompileResponse (response));
 					}
 				}

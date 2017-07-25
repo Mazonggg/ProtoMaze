@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Text.RegularExpressions;
 
-public class CreateSession : MonoBehaviour {
+public class CreateSession : SoftwareBehaviour {
 
 	public GameObject logInCanvas, mainMenuCanvas, createSessionCanvas, startSessionButton, backButton;
     public Text user_a, user_b, user_c, user_d, headline;
@@ -18,7 +18,7 @@ public class CreateSession : MonoBehaviour {
     }
 
     public void goBack() {
-        GameObject.Find(Constants.softwareModel).GetComponent<SoftwareModel>().netwRout.TCPRequest(
+		SoftwareModel.netwRout.TCPRequest(
             ResetUserInfo,
             new string[] { "req", "userId" },
             new string[] { "leaveSession", UserStatics.IdSelf.ToString() });
@@ -68,7 +68,7 @@ public class CreateSession : MonoBehaviour {
 
 		while (true) {
 			string userSession = UserStatics.SessionId.ToString ();
-			GameObject.Find (Constants.softwareModel).GetComponent<SoftwareModel> ().netwRout.TCPRequest (
+			SoftwareModel.netwRout.TCPRequest (
 				UpdateView,
 				new string[] { "req", "sessionId" },
 				new string[] { "getPlayerInSession", userSession });
