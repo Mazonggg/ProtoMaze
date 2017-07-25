@@ -109,7 +109,20 @@ public class User : GObject {
 		if (isPlayed && SoftwareModel.GameRunning) {
 			// Capture movement:
 			if ((Input.GetAxis ("Horizontal") != 0 || Input.GetAxis ("Vertical") != 0)) {
-				Vector3 dir = new Vector3 (Input.GetAxis ("Horizontal"), 0, Input.GetAxis ("Vertical"));
+				float angle = transform.localRotation.eulerAngles.y;
+				Vector3 hor = new Vector3(
+					Mathf.Cos ((90 - angle) * Mathf.PI / 180f) * Input.GetAxis ("Horizontal"),
+					0,
+					Mathf.Sin ((90 - angle) * Mathf.PI / 180f) * Input.GetAxis ("Horizontal"));
+				Vector3 ver = new Vector3(
+					Mathf.Sin (angle * Mathf.PI / 180f) * Input.GetAxis ("Vertical"),
+					0, 
+					Mathf.Cos (angle * Mathf.PI / 180f) * Input.GetAxis ("Vertical"));
+				Vector3 dir = hor + ver;
+				Debug.Log ("rot=" + angle * Mathf.PI / 180f);
+				Debug.Log ("hor=" + hor.x + " / " + hor.y + " / " + hor.z);
+				Debug.Log ("ver=" + ver.x + " / " + ver.y + " / " + ver.z);
+				//Vector3 dir = new Vector3 (Input.GetAxis ("Horizontal"), 0, Input.GetAxis ("Vertical"));
 				Move (dir, Constants.moveSpeed);
 			} 
 			animator.SetFloat ("Forward", Input.GetAxis ("Vertical"));

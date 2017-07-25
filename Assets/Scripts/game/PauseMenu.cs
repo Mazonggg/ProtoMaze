@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 
 public class PauseMenu : SoftwareBehaviour {
 	
-	public GameObject resumeButton, quitButton, pauseMenuCanvas, startMenuCanvas;
+	public GameObject resumeButton, quitButton, pauseMenuCanvas, startMenuCanvas, mainCamera;
 	public GameObject debugText, timerText;
 
 	private bool gamePaused = false;
@@ -27,6 +27,7 @@ public class PauseMenu : SoftwareBehaviour {
 		get { return gameHasStarted; }
 		set { 
 			if (!startedBefore) {
+				mainCamera.GetComponent<MainCameraBehaviour> ().PositionCamera ();
 				gameHasStarted = true;
 				startedBefore = value;
 			}
