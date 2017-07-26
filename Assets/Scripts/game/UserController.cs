@@ -56,6 +56,16 @@ public class UserController: SoftwareBehaviour {
 				softwareModel.GetComponent<LevelBehaviour>().GetStartPosition(users.Count), 
 				Quaternion.Euler(0, 0, 0), 
 				gameObject.transform);
+			
+			Debug.Log ("usr.transform.position != " +
+			softwareModel.GetComponent<LevelBehaviour> ().GetStartPosition (users.Count).x + " / " +
+			softwareModel.GetComponent<LevelBehaviour> ().GetStartPosition (users.Count).y + " / " +
+			softwareModel.GetComponent<LevelBehaviour> ().GetStartPosition (users.Count).z);
+			Debug.Log ("usr.transform.position = " +
+				usr.transform.position.x + " / " +
+				usr.transform.position.y + " / " +
+				usr.transform.position.z);
+			
 			users.Add (usr.GetComponent<User> ());
 			UserStatics.SetUserInfo(users.IndexOf(usr.GetComponent<User> ()),user_id, user_name, user_ref); 
 			if (UserStatics.IsMySelf(users.IndexOf(usr.GetComponent<User> ()))) {

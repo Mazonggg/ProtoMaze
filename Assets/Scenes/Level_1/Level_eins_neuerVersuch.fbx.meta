@@ -1,0 +1,220 @@
+fileFormatVersion: 2
+guid: 89f8b899b4ef14033b89a4e85d2bbaac
+timeCreated: 1501067706
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: Ausgang
+    100002: Ausgangslicht
+    100004: "Au\xDFenw\xE4nde"
+    100006: "Au\xDFenw\xE4nde_MeshPart0"
+    100008: "Au\xDFenw\xE4nde_MeshPart1"
+    100010: "Au\xDFenw\xE4nde_MeshPart10"
+    100012: "Au\xDFenw\xE4nde_MeshPart11"
+    100014: "Au\xDFenw\xE4nde_MeshPart12"
+    100016: "Au\xDFenw\xE4nde_MeshPart2"
+    100018: "Au\xDFenw\xE4nde_MeshPart3"
+    100020: "Au\xDFenw\xE4nde_MeshPart4"
+    100022: "Au\xDFenw\xE4nde_MeshPart5"
+    100024: "Au\xDFenw\xE4nde_MeshPart6"
+    100026: "Au\xDFenw\xE4nde_MeshPart7"
+    100028: "Au\xDFenw\xE4nde_MeshPart8"
+    100030: "Au\xDFenw\xE4nde_MeshPart9"
+    100032: Druckplatte_a_active
+    100034: Druckplatte_a_inactive
+    100036: Druckplatte_b_active
+    100038: Druckplatte_b_inactive
+    100040: //RootNode
+    100042: Licht
+    100044: Licht_2
+    100046: Licht_3
+    100048: Licht_4
+    100050: Rampenlicht
+    100052: Rampenlicht_Instanz
+    100054: schiebetuerlinks
+    100056: schiebetuerrechts
+    100058: Spawn_a
+    100060: Spawn_b
+    100062: Spawn_c
+    100064: Spawn_d
+    100066: Spielwelt
+    400000: Ausgang
+    400002: Ausgangslicht
+    400004: "Au\xDFenw\xE4nde"
+    400006: "Au\xDFenw\xE4nde_MeshPart0"
+    400008: "Au\xDFenw\xE4nde_MeshPart1"
+    400010: "Au\xDFenw\xE4nde_MeshPart10"
+    400012: "Au\xDFenw\xE4nde_MeshPart11"
+    400014: "Au\xDFenw\xE4nde_MeshPart12"
+    400016: "Au\xDFenw\xE4nde_MeshPart2"
+    400018: "Au\xDFenw\xE4nde_MeshPart3"
+    400020: "Au\xDFenw\xE4nde_MeshPart4"
+    400022: "Au\xDFenw\xE4nde_MeshPart5"
+    400024: "Au\xDFenw\xE4nde_MeshPart6"
+    400026: "Au\xDFenw\xE4nde_MeshPart7"
+    400028: "Au\xDFenw\xE4nde_MeshPart8"
+    400030: "Au\xDFenw\xE4nde_MeshPart9"
+    400032: Druckplatte_a_active
+    400034: Druckplatte_a_inactive
+    400036: Druckplatte_b_active
+    400038: Druckplatte_b_inactive
+    400040: //RootNode
+    400042: Licht
+    400044: Licht_2
+    400046: Licht_3
+    400048: Licht_4
+    400050: Rampenlicht
+    400052: Rampenlicht_Instanz
+    400054: schiebetuerlinks
+    400056: schiebetuerrechts
+    400058: Spawn_a
+    400060: Spawn_b
+    400062: Spawn_c
+    400064: Spawn_d
+    400066: Spielwelt
+    2300000: Ausgang
+    2300002: "Au\xDFenw\xE4nde_MeshPart0"
+    2300004: "Au\xDFenw\xE4nde_MeshPart1"
+    2300006: "Au\xDFenw\xE4nde_MeshPart10"
+    2300008: "Au\xDFenw\xE4nde_MeshPart11"
+    2300010: "Au\xDFenw\xE4nde_MeshPart12"
+    2300012: "Au\xDFenw\xE4nde_MeshPart2"
+    2300014: "Au\xDFenw\xE4nde_MeshPart3"
+    2300016: "Au\xDFenw\xE4nde_MeshPart4"
+    2300018: "Au\xDFenw\xE4nde_MeshPart5"
+    2300020: "Au\xDFenw\xE4nde_MeshPart6"
+    2300022: "Au\xDFenw\xE4nde_MeshPart7"
+    2300024: "Au\xDFenw\xE4nde_MeshPart8"
+    2300026: "Au\xDFenw\xE4nde_MeshPart9"
+    2300028: Druckplatte_a_active
+    2300030: Druckplatte_a_inactive
+    2300032: Druckplatte_b_active
+    2300034: Druckplatte_b_inactive
+    2300036: schiebetuerlinks
+    2300038: schiebetuerrechts
+    2300040: Spawn_a
+    2300042: Spawn_b
+    2300044: Spawn_c
+    2300046: Spawn_d
+    2300048: Spielwelt
+    3300000: Ausgang
+    3300002: "Au\xDFenw\xE4nde_MeshPart0"
+    3300004: "Au\xDFenw\xE4nde_MeshPart1"
+    3300006: "Au\xDFenw\xE4nde_MeshPart10"
+    3300008: "Au\xDFenw\xE4nde_MeshPart11"
+    3300010: "Au\xDFenw\xE4nde_MeshPart12"
+    3300012: "Au\xDFenw\xE4nde_MeshPart2"
+    3300014: "Au\xDFenw\xE4nde_MeshPart3"
+    3300016: "Au\xDFenw\xE4nde_MeshPart4"
+    3300018: "Au\xDFenw\xE4nde_MeshPart5"
+    3300020: "Au\xDFenw\xE4nde_MeshPart6"
+    3300022: "Au\xDFenw\xE4nde_MeshPart7"
+    3300024: "Au\xDFenw\xE4nde_MeshPart8"
+    3300026: "Au\xDFenw\xE4nde_MeshPart9"
+    3300028: Druckplatte_a_active
+    3300030: Druckplatte_a_inactive
+    3300032: Druckplatte_b_active
+    3300034: Druckplatte_b_inactive
+    3300036: schiebetuerlinks
+    3300038: schiebetuerrechts
+    3300040: Spawn_a
+    3300042: Spawn_b
+    3300044: Spawn_c
+    3300046: Spawn_d
+    3300048: Spielwelt
+    4300000: Druckplatte_b_active
+    4300002: Druckplatte_b_inactive
+    4300004: Druckplatte_a_active
+    4300006: Druckplatte_a_inactive
+    4300008: Spawn_d
+    4300010: Spawn_c
+    4300012: Spawn_b
+    4300014: Spawn_a
+    4300016: Ausgang
+    4300018: Spielwelt
+    4300020: "Au\xDFenw\xE4nde_MeshPart0"
+    4300022: "Au\xDFenw\xE4nde_MeshPart1"
+    4300024: "Au\xDFenw\xE4nde_MeshPart2"
+    4300026: "Au\xDFenw\xE4nde_MeshPart3"
+    4300028: "Au\xDFenw\xE4nde_MeshPart4"
+    4300030: "Au\xDFenw\xE4nde_MeshPart5"
+    4300032: "Au\xDFenw\xE4nde_MeshPart6"
+    4300034: "Au\xDFenw\xE4nde_MeshPart7"
+    4300036: "Au\xDFenw\xE4nde_MeshPart8"
+    4300038: "Au\xDFenw\xE4nde_MeshPart9"
+    4300040: "Au\xDFenw\xE4nde_MeshPart10"
+    4300042: "Au\xDFenw\xE4nde_MeshPart11"
+    4300044: "Au\xDFenw\xE4nde_MeshPart12"
+    4300046: schiebetuerlinks
+    4300048: schiebetuerrechts
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

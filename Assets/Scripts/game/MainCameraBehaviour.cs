@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MainCameraBehaviour : SoftwareBehaviour {
 	
-	private Vector3 cameraDefault = new Vector3 (0f, 15f, -7f);
+	private Vector3 cameraDefault = new Vector3 (3f, 15f, -15f);
 	public GameObject userController;
 	// Update is called once per frame
 	void Update () {

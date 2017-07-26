@@ -119,10 +119,6 @@ public class User : GObject {
 					0, 
 					Mathf.Cos (angle * Mathf.PI / 180f) * Input.GetAxis ("Vertical"));
 				Vector3 dir = hor + ver;
-				Debug.Log ("rot=" + angle * Mathf.PI / 180f);
-				Debug.Log ("hor=" + hor.x + " / " + hor.y + " / " + hor.z);
-				Debug.Log ("ver=" + ver.x + " / " + ver.y + " / " + ver.z);
-				//Vector3 dir = new Vector3 (Input.GetAxis ("Horizontal"), 0, Input.GetAxis ("Vertical"));
 				Move (dir, Constants.moveSpeed);
 			} 
 			animator.SetFloat ("Forward", Input.GetAxis ("Vertical"));
