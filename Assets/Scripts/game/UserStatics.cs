@@ -99,7 +99,7 @@ public class UserStatics {
 	/// <param name="user_name">User name.</param>
 	public static void SetUserInfo(int index_of_user, int user_id, string user_name, string user_ref) {
 
-		Debug.Log ("SetUserInfo: index_of_user=" + index_of_user + " / user_id=" + user_id + " / user_name=" + " / user_ref=" + user_ref);
+		// Debug.Log ("SetUserInfo: index_of_user=" + index_of_user + " / user_id=" + user_id + " / user_name=" + " / user_ref=" + user_ref);
 		userIds [index_of_user] = user_id;
 		userNames [index_of_user] = user_name;
 		userRefs [index_of_user] = user_ref;

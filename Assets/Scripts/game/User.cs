@@ -76,10 +76,8 @@ public class User : GObject {
 	}
 
 	public void UpdateUser(UpdateData upData) {
-
-		//Debug.Log("x=" + (transform.position.x - upData.Position.x) + " / y=" + (transform.position.y - upData.Position.y) + " / z=" + (transform.position.z - upData.Position.z));
+		
 		if (transform.position.x != upData.Position.x || transform.position.y != upData.Position.y || transform.position.z != upData.Position.z) {
-			transform.position = upData.Position;
 			animator.SetFloat ("Forward", 1f);
 			standCounter = 0;
 			if (standLimit < standMax) {
@@ -97,6 +95,8 @@ public class User : GObject {
 				standCounter++;
 			}
 		}
+
+		Move(upData.Position - transform.position, Constants.moveSpeed);
 		transform.localRotation = Quaternion.Euler (upData.Rotation);
 	}
 

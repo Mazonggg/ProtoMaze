@@ -28,7 +28,6 @@ public class CreateSession : SoftwareBehaviour {
     }
 
 	void OnDestroy() {
-		Debug.Log ("OnDestroy: CreateSession");
 		StopCoroutine (updateLobby);
 	}
 
@@ -117,10 +116,7 @@ public class CreateSession : SoftwareBehaviour {
 		}
     }
 
-	private float zeit = 0;
     public void StartUpdateLobby() {
-		Debug.Log ("StartUpdateLobby(): " + (Time.realtimeSinceStartup - zeit));
-		zeit = Time.realtimeSinceStartup;
 		updateLobby = UpdateLobby ();
 		StartCoroutine(updateLobby);
     }

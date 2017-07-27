@@ -8,8 +8,8 @@ using UnityEngine.SceneManagement;
 
 public class PauseMenu : SoftwareBehaviour {
 	
-	public GameObject resumeButton, quitButton, pauseMenuCanvas, startMenuCanvas, mainCamera;
-	public GameObject debugText, timerText;
+	public GameObject resumeButton, quitButton, pauseMenuCanvas, startMenuCanvas, mainCamera, startText, startButton;
+	public GameObject pingText, timerText;
 
 	private bool gamePaused = false;
 	private bool GamePaused {
@@ -18,9 +18,7 @@ public class PauseMenu : SoftwareBehaviour {
 			SoftwareModel.GameRunning = !gamePaused && GameHasStarted;
 		}
 	}
-/*	public bool GameIsPaused {
-		get { return gamePaused && gameHasStarted; }
-	}*/
+
 	private bool gameHasStarted = false;
 	private bool startedBefore = false;
 	public bool GameHasStarted {
@@ -37,6 +35,7 @@ public class PauseMenu : SoftwareBehaviour {
 	void Start() {
 
 		TogglePause (false);
+		ShowStartingMenu ();
 	}
 
 
@@ -53,6 +52,8 @@ public class PauseMenu : SoftwareBehaviour {
 
 	public void StartGame() {
 
+		startText.GetComponent<Text> ().text = "WAIT";
+		startButton.SetActive (false);
 		SoftwareModel.netwRout.TCPRequest(
 			NetworkRoutines.EmptyCallback,
 			new string[] { "req", "sessionId" },
@@ -114,6 +115,8 @@ public class PauseMenu : SoftwareBehaviour {
 
 	public void ShowStartingMenu() {
 
+		startText.GetComponent<Text> ().text = "Start Game";
+		startButton.SetActive (true);
 		startMenuCanvas.SetActive (true);
 		pauseMenuCanvas.SetActive (false);
 		Time.timeScale = 0f;
@@ -122,6 +125,6 @@ public class PauseMenu : SoftwareBehaviour {
 	// TODO dev. helper
 	public void ShowState(string state) {
 
-		debugText.GetComponent<Text> ().text = "Game state: " + state;
+		pingText.GetComponent<Text> ().text = "Ping: " + state;
 	}
 }

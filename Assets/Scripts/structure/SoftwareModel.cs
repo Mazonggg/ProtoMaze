@@ -28,7 +28,8 @@ public class SoftwareModel : SoftwareBehaviour {
 	}
 
 	public void CreateSocketObject(int timer){
-		
-		socketObj = new SocketObject (timer);
+
+		gameObject.AddComponent<SocketObject> ();
+		gameObject.GetComponent<SocketObject> ().SetSocket (timer);
 	}
 }

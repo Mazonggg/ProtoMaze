@@ -9,7 +9,7 @@ public class TimerScript : MonoBehaviour {
 	public void SetTimer (int time) {
 		if (time > 0) {
 			gameObject.GetComponent<Text> ().text = ConvertSeconds (time);
-			gameObject.GetComponent<Text> ().color = Constants.defaultColor;
+			gameObject.GetComponent<Text> ().color = Color.red;
 		} else {
 			gameObject.GetComponent<Text> ().text = "Time over";
 			gameObject.GetComponent<Text> ().color = Constants.secondaryColor;

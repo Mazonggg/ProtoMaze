@@ -7,7 +7,8 @@ using UnityEngine;
 /// Base-object for every movable object in a level.
 /// </summary>
 public class GObject : SoftwareBehaviour {
-	
+
+
 	/// <summary>
 	/// Database Id of this object on server.
 	/// </summary>
@@ -58,6 +59,8 @@ public class GObject : SoftwareBehaviour {
 	 * Moves GObject according to given direction and pace parameters.
 	 */
 	protected void Move(Vector3 dir, float pace){
+		//GetComponent<Rigidbody> ().MovePosition (transform.position + (dir * pace * Time.deltaTime));
+		GetComponent<Rigidbody> ().velocity = dir * pace * Time.deltaTime;
 		transform.position += dir * pace * Time.deltaTime;
 		updated = true;
 	}

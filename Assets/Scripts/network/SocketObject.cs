@@ -14,6 +14,7 @@ using System.Net.Sockets;
 public class SocketObject: SoftwareBehaviour {
 
 	private static string serverError = "Error";
+	private static string nothingFound = "nothingFound";
 
 	private Thread socketThread;
 	private Socket socket;
@@ -23,14 +24,13 @@ public class SocketObject: SoftwareBehaviour {
 
 	private IPEndPoint endPoint = new IPEndPoint(IPv4, port);
 
-	private UserController userController;
 	private TimerScript timerScript;
 	private PauseMenu pauseMenu;
 
 	private int levelTimer = 0;
 
-	public SocketObject(int timer){
-
+	public void SetSocket(int timer){
+		
 		levelTimer = timer;
 		// Create the socket, that communicates with server.
 		socket = new Socket (AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
@@ -42,14 +42,7 @@ public class SocketObject: SoftwareBehaviour {
 			HandleSessionStart,
 			new string[] { "req", "sessionId", "userId" }, 
 			new string[] { "startSession", sessionId, userId });
-
-		userController = SoftwareModel.userController;
-		pauseMenu = GameObject.Find ("PauseMenuController").GetComponent<PauseMenu> ();
-		timerScript = GameObject.Find ("TimerText").GetComponent<TimerScript> ();
-
-		WorkOnSocket ();
 	}
-
 	/// <summary>
 	/// Handles the session start. Assigns the other users in the game-session to the respective GameObjects.
 	/// Starts socket, if necessary.
@@ -78,9 +71,13 @@ public class SocketObject: SoftwareBehaviour {
 				int.TryParse(pair[1], out user_id);
 			} else if (pair[0].Equals ("un")) {
 				user_name = pair[1];
-				userController.AddUser (user_ref, user_id, user_name);
+				SoftwareModel.userController.AddUser (user_ref, user_id, user_name);
 			}
 		}
+		pauseMenu = GameObject.Find ("PauseMenuController").GetComponent<PauseMenu> ();
+		timerScript = GameObject.Find ("TimerText").GetComponent<TimerScript> ();
+
+		WorkOnSocket ();
 	}
 
 	/// <summary>
@@ -89,8 +86,8 @@ public class SocketObject: SoftwareBehaviour {
 	/// </summary>
 	private void WorkOnSocket(){
 		
-		SoftwareModel.StartCoroutine (TellSocket());
-		SoftwareModel.StartCoroutine (ListenToSocket());
+		StartCoroutine (TellSocket());
+		StartCoroutine (ListenToSocket());
     }
 
 	// storage for upstream data.
@@ -105,14 +102,11 @@ public class SocketObject: SoftwareBehaviour {
 	/// <returns>The socket.</returns>
 	private IEnumerator TellSocket(){
 
-		yield return new WaitForSeconds(1f);
-
-		SendDatagram();
 		while (true) {
 			// Transmitted data
 			currentTime = Time.realtimeSinceStartup;
 			// Only tick, if changes in game state is found and time since last tick fits tickrate.
-			User usr = userController.ThisUser;
+			User usr = SoftwareModel.userController.ThisUser;
 
 			if (usr.Updated && (currentTime - lastDatagram > 0.04)) {
 				SendDatagram ();
@@ -120,15 +114,17 @@ public class SocketObject: SoftwareBehaviour {
 			}
 			yield return null;
 		}
+		yield return new WaitForSeconds(1f);
 	}
 
 	private int counting = 0;
 	private void SendDatagram() {
 		
 		string info = CollectUserData ();
-		// Debug.Log ("SendDatagram: " + info);
-		sendBuf = System.Text.ASCIIEncoding.ASCII.GetBytes (info);
-		sendBytes = socket.SendTo (sendBuf, endPoint);
+		if(!info.Equals(nothingFound)){
+			sendBuf = System.Text.ASCIIEncoding.ASCII.GetBytes (info);
+			sendBytes = socket.SendTo (sendBuf, endPoint);
+		}
 	}
 
 
@@ -140,10 +136,7 @@ public class SocketObject: SoftwareBehaviour {
 	/// <returns>The to socket.</returns>
 	private IEnumerator ListenToSocket (){
 
-		yield return new WaitForSeconds(1f);
-
 		while (true) {
-			yield return null;
 			if (socket.Poll(0, SelectMode.SelectRead)) {
 				int bytesReceived = socket.Receive(receiveBuf, 0, receiveBuf.Length, SocketFlags.None);
 
@@ -151,7 +144,9 @@ public class SocketObject: SoftwareBehaviour {
 					ProcessDownBuf (receiveBuf);
 				}
 			}
+			yield return null;
 		}		
+		yield return new WaitForSeconds(1f);
 	}
 
 	/// <summary>
@@ -164,10 +159,13 @@ public class SocketObject: SoftwareBehaviour {
 		string bufString = System.Text.ASCIIEncoding.ASCII.GetString (buf);
 		// Debug.Log ("ProcessDownBuf: " + bufString);
 		string[] pairs = bufString.Split('&');
-
 		for (int i = 0; i < pairs.Length; i++) {
 			string[] pair = pairs [i].Split ('=');
-			if (pair [0].Equals ("ui")) {
+			if (pair [0].Equals ("PING") && pair [1].Equals ("PING")) {
+				int ping = (int) ((Time.realtimeSinceStartup - lastTime) * 1000);
+				pauseMenu.ShowState (((int) ((Time.realtimeSinceStartup - lastTime) * 1000)).ToString());
+				return;
+			} else if (pair [0].Equals ("ui")) {
 				
 				int user_id = -1;
 				int.TryParse (pair [1], out user_id);
@@ -191,26 +189,23 @@ public class SocketObject: SoftwareBehaviour {
 				float.TryParse (rot [1], out rotY);
 				float.TryParse (rot [2], out rotZ);
 
-				Debug.Log ("pos=" + posX + " / " + posY + " / " + posZ + "   /   rot=" + rotX + " / " + rotY + " / " + rotZ);
-
-				userController.UpdateUser(new UpdateData(user_id, new Vector3(posX, posY, posZ), new Vector3(rotX, rotY, rotZ)));
+				SoftwareModel.userController.UpdateUser(new UpdateData(user_id, new Vector3(posX, posY, posZ), new Vector3(rotX, rotY, rotZ)));
 			} else if (pair [0].Equals (Constants.sfState)) {
 
 				if (pair [1].Equals (Constants.sfPaused)) {
 					// LOGIC FOR PAUSING THE GAME.	
+					Debug.Log("PAUSED");
 					pauseMenu.TogglePause (true);
 				} else if (pair [1].Equals (Constants.sfRunning)) {
 					// LOGIC TO RESUME THE GAME.
+					Debug.Log("RUNNING");
 					pauseMenu.TogglePause (false);
 					// Checks if game was started before and acts accordingly to start it.
 					if (!pauseMenu.GameHasStarted) {
 						pauseMenu.GameHasStarted = true;
 					}
-				} else if (pair [1].Equals (Constants.sfStarting)) {
-					// LOGIC TO SHOW STARTING MENU.
-					pauseMenu.ShowStartingMenu ();
-				} 
-				pauseMenu.ShowState (pair [1]);
+				}
+				// pauseMenu.ShowState (pair [1]);
 			} else if(pair[0].Equals (Constants.sfTimer)) {
 				int time = 0;
 				int.TryParse (pair [1], out time);
@@ -227,18 +222,19 @@ public class SocketObject: SoftwareBehaviour {
 	/// </summary>
 	/// <returns>The user data.</returns>
 	private string CollectUserData() {
-		
-		UpdateData userData = userController.ThisUser.UpdateData;
 
-		string msg = "t=";
-		if (userData.ObjectHeld == null) {
-			msg += "1";
-		} else {
-			msg += "2";
-		}
+		if (SoftwareModel.userController.ThisUser != null) {
+			UpdateData userData = SoftwareModel.userController.ThisUser.UpdateData;
 
-		msg += "&ui=" + userData.Id;
-		msg += "&up=" +
+			string msg = "t=";
+			if (userData.ObjectHeld == null) {
+				msg += "1";
+			} else {
+				msg += "2";
+			}
+
+			msg += "&ui=" + userData.Id;
+			msg += "&up=" +
 			userData.Position.x + "_" +
 			userData.Position.y + "_" +
 			userData.Position.z + ";" +
@@ -246,16 +242,38 @@ public class SocketObject: SoftwareBehaviour {
 			userData.Rotation.y + "_" +
 			userData.Rotation.z;
 
-		if (userData.ObjectHeld != null) {
-			msg += "&oi=" + userData.ObjectHeld.Id;
-			msg += "&op=" +
+			if (userData.ObjectHeld != null) {
+				msg += "&oi=" + userData.ObjectHeld.Id;
+				msg += "&op=" +
 				userData.ObjectHeld.Position.x + "_" +
 				userData.ObjectHeld.Position.y + "_" +
 				userData.ObjectHeld.Position.z + ";" +
 				userData.ObjectHeld.Rotation.x + "_" +
 				userData.ObjectHeld.Rotation.y + "_" +
 				userData.ObjectHeld.Rotation.z;
+			}
+			return msg;
+		} else {
+			return nothingFound;
 		}
-		return msg;
+	}
+
+	private float lastTime = 0;
+	private float lastPing = 0;
+	private float pingInt = 1;
+	/// <summary>
+	/// Update method user to permanently count the ping between client and server
+	/// and send updates of user once per second.
+	/// </summary>
+	void Update() {
+		
+		if (Time.realtimeSinceStartup > lastPing + pingInt) {
+			// Debug.Log ("FICK DICH!");
+			lastPing = lastTime = Time.realtimeSinceStartup;
+			sendBuf = System.Text.ASCIIEncoding.ASCII.GetBytes ("PING");
+			sendBytes = socket.SendTo (sendBuf, endPoint);
+			// Send update of User.
+			SendDatagram();
+		}
 	}
 }
