@@ -53,18 +53,11 @@ public class UserController: SoftwareBehaviour {
 		if (users.Count < 4) {
 			GameObject usr = GameObject.Instantiate(
 				userPrefab, 
-				softwareModel.GetComponent<LevelBehaviour>().GetStartPosition(users.Count), 
+				new Vector3(0,0,0), 
 				Quaternion.Euler(0, 0, 0), 
 				gameObject.transform);
-			
-			Debug.Log ("usr.transform.position != " +
-			softwareModel.GetComponent<LevelBehaviour> ().GetStartPosition (users.Count).x + " / " +
-			softwareModel.GetComponent<LevelBehaviour> ().GetStartPosition (users.Count).y + " / " +
-			softwareModel.GetComponent<LevelBehaviour> ().GetStartPosition (users.Count).z);
-			Debug.Log ("usr.transform.position = " +
-				usr.transform.position.x + " / " +
-				usr.transform.position.y + " / " +
-				usr.transform.position.z);
+
+			usr.GetComponent<Rigidbody>().MovePosition( softwareModel.GetComponent<LevelBehaviour> ().GetStartPosition (users.Count));
 			
 			users.Add (usr.GetComponent<User> ());
 			UserStatics.SetUserInfo(users.IndexOf(usr.GetComponent<User> ()),user_id, user_name, user_ref); 

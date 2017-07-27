@@ -7,11 +7,15 @@ public class StartLevel_1 : LevelBehaviour {
 	// Declares the stating positions of the users.
 	protected override Vector3 StartPositions (int index) {
 		Vector3[] arr = new Vector3[] {
-			// new Vector3 (0, 0, 0), 
-			new Vector3 (-52f, 0.7f, 46.8f),
+
+			new Vector3 (0, 0.5f, 0),
+			new Vector3 (5, 0.5f, 0),
+			new Vector3 (-5, 0.5f, 0),
+			new Vector3 (0, 0.5f, -5)
+			/*new Vector3 (-52f, 0.7f, 46.8f),
 			new Vector3 (-52f, 0.7f, 55.9f),
 			new Vector3 (-59.8f, 0.7f, 46.8f),
-			new Vector3 (-59.8f, 0.7f, -55.9f)
+			new Vector3 (-59.8f, 0.7f, -55.9f)*/
 		};
 		if (index < arr.Length) {
 			return arr [index];

@@ -26,14 +26,6 @@ public class SoftwareModel : SoftwareBehaviour {
 		get { return gameRunning; }
 		set { gameRunning = value; }
 	}
-		
-	public void PlaceUser() {
-
-		if (userController != null) {
-
-			userController.ThisUser.Place (new Vector3 (0, 0, 0), new Vector3(0, 0, 0), true);
-		}
-	}
 
 	public void CreateSocketObject(int timer){
 		

@@ -7,8 +7,7 @@ using UnityEngine;
 /// Base-object for every movable object in a level.
 /// </summary>
 public class GObject : SoftwareBehaviour {
-
-	private BoxCollider boxCollider;
+	
 	/// <summary>
 	/// Database Id of this object on server.
 	/// </summary>
@@ -31,6 +30,8 @@ public class GObject : SoftwareBehaviour {
 		get { return updated; }
 		set { updated = value; }
 	}
+
+
 	/// <summary>
 	/// Returns the relevant data for updating the server, for this object.
 	/// </summary>
@@ -51,24 +52,6 @@ public class GObject : SoftwareBehaviour {
 		transform.position = new Vector3 (0, 0, 0);
 		transform.rotation = Quaternion.Euler (0, 0, 0);
 		updated = true;
-	}
-
-	/// <summary>
-	/// Place the specified pos and rot.
-	/// </summary>
-	/// <param name="pos">Position.</param>
-	/// <param name="rot">Rot.</param>
-	public void Place(Vector3 pos, Vector3 rot, bool visible) {
-
-		transform.position = pos;
-		transform.rotation = Quaternion.Euler (rot);
-
-		GetComponent<MeshRenderer> ().enabled = visible;
-	}
-
-	// Use this for initialization
-	void Start () {
-		boxCollider = GetComponent<BoxCollider>();
 	}
 
 	/*
