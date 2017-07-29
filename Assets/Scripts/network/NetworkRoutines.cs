@@ -63,14 +63,14 @@ public class NetworkRoutines : SoftwareBehaviour {
 		// Debug.Log ("MakeRequest: " + request);
 		using (connection = UnityWebRequest.Get (request)) {
 
-			if (!waitForResponse) {
-				connection.Send ();
-				yield return null;
-			} else {
+			//if (!waitForResponse) {
+			//	connection.Send ();
+			//	yield return null;
+			//} else {
 				yield return connection.Send ();
 			
 				if (connection.isError) {
-					// Debug.Log (serverError + connection.error);
+					 Debug.Log (serverError + connection.error);
 				} else {
 					string response = connection.downloadHandler.text;
 					// Checks if the request responses with an error
@@ -81,7 +81,7 @@ public class NetworkRoutines : SoftwareBehaviour {
 						callback (CompileResponse (response));
 					}
 				}
-			}
+		//	}
 		}
 	}
 

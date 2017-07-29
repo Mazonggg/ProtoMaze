@@ -110,7 +110,7 @@ public class PauseMenu : SoftwareBehaviour {
 		startMenuCanvas.SetActive (false);
 		GamePaused = stop;
 
-		Time.timeScale = (stop ? 0f : 1f);
+		//Time.timeScale = (stop ? 0f : 1f);        erstmal nur rausgenommen weil die Couruntines damit ebenfalls gestopt werden, müssen eine andere Loesung finden
 	}
 
 	public void ShowStartingMenu() {
@@ -119,7 +119,7 @@ public class PauseMenu : SoftwareBehaviour {
 		startButton.SetActive (true);
 		startMenuCanvas.SetActive (true);
 		pauseMenuCanvas.SetActive (false);
-		Time.timeScale = 0f;
+		//Time.timeScale = 0f;
 	}
 
 	// TODO dev. helper

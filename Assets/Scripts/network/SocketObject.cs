@@ -29,6 +29,8 @@ public class SocketObject: SoftwareBehaviour {
 
 	private int levelTimer = 0;
 
+    private int counter = 0;
+
 	public void SetSocket(int timer){
 		
 		levelTimer = timer;
@@ -49,7 +51,7 @@ public class SocketObject: SoftwareBehaviour {
 	/// </summary>
 	/// <param name="response">Response.</param>
 	private void HandleSessionStart(string[][] response) {
-
+        
 		string user_ref = "";
 		int user_id = 0;
 		string user_name = "";
@@ -60,7 +62,6 @@ public class SocketObject: SoftwareBehaviour {
 
 				string userId = UserStatics.GetUserId(0).ToString();
 				string sessionId = UserStatics.SessionId.ToString();
-
 				SoftwareModel.netwRout.UDPRequest (
 					NetworkRoutines.EmptyCallback,
 					new string[] { "userId", "timer", "sessionId" }, 
@@ -85,7 +86,7 @@ public class SocketObject: SoftwareBehaviour {
 	/// Connection issues can be caught here.
 	/// </summary>
 	private void WorkOnSocket(){
-		
+        //Debug.Log("Work");
 		StartCoroutine (TellSocket());
 		StartCoroutine (ListenToSocket());
     }
@@ -101,8 +102,11 @@ public class SocketObject: SoftwareBehaviour {
 	/// </summary>
 	/// <returns>The socket.</returns>
 	private IEnumerator TellSocket(){
-
-		while (true) {
+       // Debug.Log("Tell");
+        yield return new WaitForSeconds(1f);
+        SendDatagram();
+        while (true) {
+            //Debug.Log("While Tell");
 			// Transmitted data
 			currentTime = Time.realtimeSinceStartup;
 			// Only tick, if changes in game state is found and time since last tick fits tickrate.
@@ -114,7 +118,7 @@ public class SocketObject: SoftwareBehaviour {
 			}
 			yield return null;
 		}
-		yield return new WaitForSeconds(1f);
+		
 	}
 
 	private int counting = 0;
@@ -135,18 +139,23 @@ public class SocketObject: SoftwareBehaviour {
 	/// </summary>
 	/// <returns>The to socket.</returns>
 	private IEnumerator ListenToSocket (){
-
+      //  Debug.Log("Listen");
+        yield return new WaitForSeconds(1f);
+      //  Debug.Log("Listenzwei");
 		while (true) {
-			if (socket.Poll(0, SelectMode.SelectRead)) {
-				int bytesReceived = socket.Receive(receiveBuf, 0, receiveBuf.Length, SocketFlags.None);
-
-				if (bytesReceived > 0) {
+       //     Debug.Log("Listen while");
+            yield return null;
+        //    Debug.Log("Listendrei");
+            if (socket.Poll(0, SelectMode.SelectRead)) {
+      //          Debug.Log("Listenvier");
+                int bytesReceived = socket.Receive(receiveBuf, 0, receiveBuf.Length, SocketFlags.None);
+      //          Debug.Log("bytes"+bytesReceived);
+                if (bytesReceived > 0) {
 					ProcessDownBuf (receiveBuf);
 				}
 			}
-			yield return null;
 		}		
-		yield return new WaitForSeconds(1f);
+		
 	}
 
 	/// <summary>
@@ -157,7 +166,7 @@ public class SocketObject: SoftwareBehaviour {
 	private void ProcessDownBuf(byte[] buf) {
 
 		string bufString = System.Text.ASCIIEncoding.ASCII.GetString (buf);
-		// Debug.Log ("ProcessDownBuf: " + bufString);
+	//	Debug.Log ("ProcessDownBuf: " + bufString);
 		string[] pairs = bufString.Split('&');
 		for (int i = 0; i < pairs.Length; i++) {
 			string[] pair = pairs [i].Split ('=');
@@ -198,7 +207,7 @@ public class SocketObject: SoftwareBehaviour {
 					pauseMenu.TogglePause (true);
 				} else if (pair [1].Equals (Constants.sfRunning)) {
 					// LOGIC TO RESUME THE GAME.
-					Debug.Log("RUNNING");
+				//	Debug.Log("RUNNING");
 					pauseMenu.TogglePause (false);
 					// Checks if game was started before and acts accordingly to start it.
 					if (!pauseMenu.GameHasStarted) {
@@ -252,20 +261,27 @@ public class SocketObject: SoftwareBehaviour {
 				userData.ObjectHeld.Rotation.y + "_" +
 				userData.ObjectHeld.Rotation.z;
 			}
-			return msg;
+            return msg+ System.DateTime.Now.ToString() + "Counter:"+counter++;
 		} else {
 			return nothingFound;
 		}
 	}
 
+
+
+
+
 	private float lastTime = 0;
 	private float lastPing = 0;
 	private float pingInt = 1;
+
+    //War ein Grund warum er abgekackt ist, hat gesendet bevor ueberhaupt was aufgebaut war ..
+
 	/// <summary>
 	/// Update method user to permanently count the ping between client and server
 	/// and send updates of user once per second.
 	/// </summary>
-	void Update() {
+	/*void Update() {
 		
 		if (Time.realtimeSinceStartup > lastPing + pingInt) {
 			// Debug.Log ("FICK DICH!");
@@ -275,5 +291,5 @@ public class SocketObject: SoftwareBehaviour {
 			// Send update of User.
 			SendDatagram();
 		}
-	}
+	}*/
 }
