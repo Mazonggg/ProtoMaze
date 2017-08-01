@@ -9,7 +9,7 @@ public class TimerScript : MonoBehaviour {
 	public void SetTimer (int time) {
 		if (time > 0) {
 			gameObject.GetComponent<Text> ().text = ConvertSeconds (time);
-			gameObject.GetComponent<Text> ().color = Color.red;
+			gameObject.GetComponent<Text> ().color = Constants.textColor;
 		} else {
 			gameObject.GetComponent<Text> ().text = "Time over";
 			gameObject.GetComponent<Text> ().color = Constants.secondaryColor;
@@ -22,6 +22,6 @@ public class TimerScript : MonoBehaviour {
 	/// <returns>The seconds.</returns>
 	/// <param name="time">Time.</param>
 	private string ConvertSeconds(int time) {
-		return (time / 60 < 10 ? "0" : "") + (time / 60) + ":" + (time % 60 < 10 ? "0" : "") + (time % 60);
+		return "Time: " + (time / 60 < 10 ? "0" : "") + (time / 60) + ":" + (time % 60 < 10 ? "0" : "") + (time % 60);
 	}
 }

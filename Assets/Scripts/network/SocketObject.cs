@@ -28,8 +28,8 @@ public class SocketObject: SoftwareBehaviour {
 	private PauseMenu pauseMenu;
 
 	private int levelTimer = 0;
-
     private int counter = 0;
+	private bool socketRunning = false;
 
 	public void SetSocket(int timer){
 		
@@ -86,9 +86,11 @@ public class SocketObject: SoftwareBehaviour {
 	/// Connection issues can be caught here.
 	/// </summary>
 	private void WorkOnSocket(){
+		
         //Debug.Log("Work");
 		StartCoroutine (TellSocket());
 		StartCoroutine (ListenToSocket());
+		socketRunning = true;
     }
 
 	// storage for upstream data.
@@ -172,7 +174,7 @@ public class SocketObject: SoftwareBehaviour {
 			string[] pair = pairs [i].Split ('=');
 			if (pair [0].Equals ("PING") && pair [1].Equals ("PING")) {
 				int ping = (int) ((Time.realtimeSinceStartup - lastTime) * 1000);
-				pauseMenu.ShowState (((int) ((Time.realtimeSinceStartup - lastTime) * 1000)).ToString());
+				pauseMenu.SetPing (((int) ((Time.realtimeSinceStartup - lastTime) * 1000)).ToString());
 				return;
 			} else if (pair [0].Equals ("ui")) {
 				
@@ -203,7 +205,7 @@ public class SocketObject: SoftwareBehaviour {
 
 				if (pair [1].Equals (Constants.sfPaused)) {
 					// LOGIC FOR PAUSING THE GAME.	
-					Debug.Log("PAUSED");
+				// 	Debug.Log("PAUSED");
 					pauseMenu.TogglePause (true);
 				} else if (pair [1].Equals (Constants.sfRunning)) {
 					// LOGIC TO RESUME THE GAME.
@@ -275,21 +277,24 @@ public class SocketObject: SoftwareBehaviour {
 	private float lastPing = 0;
 	private float pingInt = 1;
 
-    //War ein Grund warum er abgekackt ist, hat gesendet bevor ueberhaupt was aufgebaut war ..
+    // War ein Grund warum er abgekackt ist, hat gesendet bevor ueberhaupt was aufgebaut war ..
+	// Einfach eine Abfrage rein, ob der Socket schon am Arbeiten ist (y).
 
 	/// <summary>
 	/// Update method user to permanently count the ping between client and server
 	/// and send updates of user once per second.
 	/// </summary>
-	/*void Update() {
-		
-		if (Time.realtimeSinceStartup > lastPing + pingInt) {
-			// Debug.Log ("FICK DICH!");
-			lastPing = lastTime = Time.realtimeSinceStartup;
-			sendBuf = System.Text.ASCIIEncoding.ASCII.GetBytes ("PING");
-			sendBytes = socket.SendTo (sendBuf, endPoint);
-			// Send update of User.
-			SendDatagram();
+	void Update() {
+
+		if (socketRunning) {
+			if (Time.realtimeSinceStartup > lastPing + pingInt) {
+				// Debug.Log ("FICK DICH!");
+				lastPing = lastTime = Time.realtimeSinceStartup;
+				sendBuf = System.Text.ASCIIEncoding.ASCII.GetBytes ("PING");
+				sendBytes = socket.SendTo (sendBuf, endPoint);
+				// Send update of User.
+				SendDatagram ();
+			}
 		}
-	}*/
+	}
 }

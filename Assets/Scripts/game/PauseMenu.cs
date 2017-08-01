@@ -32,6 +32,11 @@ public class PauseMenu : SoftwareBehaviour {
 		}
 	}
 
+	private List<Animator> animators = new List<Animator>();
+	public void AddAnimator(Animator anim) {
+		animators.Add (anim);
+	}
+
 	void Start() {
 
 		TogglePause (false);
@@ -52,7 +57,7 @@ public class PauseMenu : SoftwareBehaviour {
 
 	public void StartGame() {
 
-		startText.GetComponent<Text> ().text = "WAIT";
+		startText.GetComponent<Text> ().text = "WAIT...";
 		startButton.SetActive (false);
 		SoftwareModel.netwRout.TCPRequest(
 			NetworkRoutines.EmptyCallback,
@@ -110,20 +115,29 @@ public class PauseMenu : SoftwareBehaviour {
 		startMenuCanvas.SetActive (false);
 		GamePaused = stop;
 
+		ToggleAnimators (stop);
 		//Time.timeScale = (stop ? 0f : 1f);        erstmal nur rausgenommen weil die Couruntines damit ebenfalls gestopt werden, müssen eine andere Loesung finden
 	}
 
+	private void ToggleAnimators(bool stop) {
+
+		foreach (Animator anim in animators) {
+			anim.speed = (stop ? 0f : 1f);
+		}
+	}
 	public void ShowStartingMenu() {
 
 		startText.GetComponent<Text> ().text = "Start Game";
 		startButton.SetActive (true);
 		startMenuCanvas.SetActive (true);
 		pauseMenuCanvas.SetActive (false);
-		//Time.timeScale = 0f;
 	}
 
-	// TODO dev. helper
-	public void ShowState(string state) {
+	/// <summary>
+	/// Sets the ping, that is displayed in game.
+	/// </summary>
+	/// <param name="state">State.</param>
+	public void SetPing(string state) {
 
 		pingText.GetComponent<Text> ().text = "Ping: " + state;
 	}

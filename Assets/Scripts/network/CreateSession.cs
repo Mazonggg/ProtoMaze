@@ -102,9 +102,9 @@ public class CreateSession : SoftwareBehaviour {
 				} else if(usernames[i].Equals(Constants.noUser)) {
 					users [i].text = Constants.freeUser;
 					users [i].fontStyle = FontStyle.Normal;
-					users [i].color = Constants.defaultColor;
+					users [i].color = Constants.textColor;
 				} else {
-					users [i].color = Constants.defaultColor;
+					users [i].color = Constants.textColor;
 				}
 			}
 

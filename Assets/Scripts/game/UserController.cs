@@ -8,7 +8,7 @@ using UnityEngine;
 /// </summary>
 public class UserController: SoftwareBehaviour {
 
-	public GameObject userPrefab, softwareModel;
+	public GameObject userPrefab, pauseMenuController;
 
 	private List<User> users = new List<User>();
 	public User ThisUser {
@@ -57,7 +57,7 @@ public class UserController: SoftwareBehaviour {
 				Quaternion.Euler(0, 0, 0), 
 				gameObject.transform);
 
-			usr.GetComponent<Rigidbody>().MovePosition( softwareModel.GetComponent<LevelBehaviour> ().GetStartPosition (users.Count));
+			usr.GetComponent<Rigidbody>().MovePosition( SoftwareModel.GetComponent<LevelBehaviour> ().GetStartPosition (users.Count));
 			
 			users.Add (usr.GetComponent<User> ());
 			UserStatics.SetUserInfo(users.IndexOf(usr.GetComponent<User> ()),user_id, user_name, user_ref); 
@@ -65,6 +65,7 @@ public class UserController: SoftwareBehaviour {
 				usr.GetComponent<User> ().IsPlayed = true;
 			}
 			usr.GetComponent<User>().userInfo.GetComponent<TextMesh>().text = user_ref + " : " + user_name;
+			pauseMenuController.GetComponent<PauseMenu> ().AddAnimator (usr.GetComponent<Animator> ());
 		}
 	}
 

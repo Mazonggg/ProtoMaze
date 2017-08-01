@@ -34,8 +34,7 @@ public class JoinSession : SoftwareBehaviour {
 
     private void AddButtons(string[][] sessionList) {
 
-        for (var i = content.transform.childCount - 1; i >= 1; i--)
-        {
+        for (var i = content.transform.childCount - 1; i >= 1; i--) {
 
             var oldButton = content.transform.GetChild(i);
             oldButton.transform.parent = null;
@@ -54,7 +53,12 @@ public class JoinSession : SoftwareBehaviour {
 				newButton.transform.SetParent (content.transform);
 				if (sessionList [i] [1].Equals ("_")) {
 					newButton.GetComponent<Image> ().enabled = false;
-				} 
+					newButton.GetComponent<JoinSessionButtonPrefab> ().SetUp ("", "");
+					newButton.GetComponent<JoinSessionButtonPrefab> ().enabled = false;
+				} else {
+					newButton.GetComponent<Image> ().enabled = true;
+					newButton.GetComponent<PointerHandler> ().enabled = true;
+				}
 				count = i;
         	}
         	RectTransform newRT = content.GetComponent<RectTransform>();        //to get the RectTransform from content

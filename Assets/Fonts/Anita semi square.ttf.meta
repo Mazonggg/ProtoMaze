@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: b1254b6e9db9343d9b033f9beeb4def4
+timeCreated: 1501597562
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Anita  Semi-square
+  fontNames:
+  - Anita  Semi-square
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -15,7 +15,7 @@ public class User : GObject {
 		get { return isPlayed; }
 		set { 
 			isPlayed = value;
-			userInfo.GetComponent<MeshRenderer> ().material.color = Constants.userColor;
+			userInfo.SetActive (false);
 		}
 	}
 	private GObject objectHeld;

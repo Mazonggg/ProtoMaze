@@ -7,9 +7,10 @@ public sealed class Constants {
 	// Holds all types of GObject forms.
 	public static string[] objectForms = {"Cube", "Cone", "Ball", "Sphere"};
 
-	public static Color userColor = new Color (0.25f, 0.5f, 0.9f);
+	public static Color userColor = new Color (0.25f, 0.5f, 0.9f); //64;128;230 / #4080e6
 	public static Color secondaryColor = new Color (0.9f, 0.5f, 0.25f);
-	public static Color defaultColor = new Color (0.0f, 0.0f, 0.0f);
+	public static Color textColorHover = userColor;//new Color (1.0f, 1.0f, 1.0f);
+	public static Color textColor = new Color(0.9f, 0.9f, 0.9f);
 	// Movement speed of Users.
 	public static float moveSpeed = 6f;
 	public static float runSpeed = 12f;
