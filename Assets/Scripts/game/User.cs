@@ -95,8 +95,9 @@ public class User : GObject {
 				standCounter++;
 			}
 		}
-
-		Move(upData.Position - transform.position, Constants.moveSpeed);
+		bool running = false;
+		animator.SetBool ("Running", running);
+		Move(upData.Position - transform.position, running ? Constants.runSpeed : Constants.moveSpeed);
 		transform.localRotation = Quaternion.Euler (upData.Rotation);
 	}
 
@@ -119,11 +120,13 @@ public class User : GObject {
 					0, 
 					Mathf.Cos (angle * Mathf.PI / 180f) * Input.GetAxis ("Vertical"));
 				Vector3 dir = hor + ver;
-				Move (dir, Constants.moveSpeed);
+				Move (dir, animator.GetBool("Running") ? Constants.runSpeed : Constants.moveSpeed);
 			} 
 			animator.SetFloat ("Forward", Input.GetAxis ("Vertical"));
 			// Capture rotation:
 			Rotate (Input.GetAxisRaw("Mouse X"), Constants.rotationFactor);
+			// Capture running:
+			animator.SetBool ("Running", Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift));
 		}
 	}
 }

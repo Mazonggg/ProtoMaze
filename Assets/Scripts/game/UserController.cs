@@ -58,7 +58,8 @@ public class UserController: SoftwareBehaviour {
 				gameObject.transform);
 
 			usr.GetComponent<Rigidbody>().MovePosition( SoftwareModel.GetComponent<LevelBehaviour> ().GetStartPosition (users.Count));
-			
+			usr.transform.localRotation = Quaternion.Euler (SoftwareModel.GetComponent<LevelBehaviour> ().GetStartRotation (users.Count));
+
 			users.Add (usr.GetComponent<User> ());
 			UserStatics.SetUserInfo(users.IndexOf(usr.GetComponent<User> ()),user_id, user_name, user_ref); 
 			if (UserStatics.IsMySelf(users.IndexOf(usr.GetComponent<User> ()))) {
@@ -67,6 +68,8 @@ public class UserController: SoftwareBehaviour {
 			usr.GetComponent<User>().userInfo.GetComponent<TextMesh>().text = user_ref + " : " + user_name;
 			pauseMenuController.GetComponent<PauseMenu> ().AddAnimator (usr.GetComponent<Animator> ());
 		}
+		// Set the timeOut of PressurePlate according to number of players in game.
+		PressurePlate.TimeOut = SoftwareModel.GetComponent<LevelBehaviour> ().GetPlateTimeOut (users.Count);
 	}
 
 	/// <summary>

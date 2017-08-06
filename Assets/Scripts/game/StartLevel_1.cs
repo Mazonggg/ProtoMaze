@@ -4,19 +4,50 @@ using UnityEngine;
 
 public class StartLevel_1 : LevelBehaviour {
 
-	// Declares the stating positions of the users.
 	protected override Vector3 StartPositions (int index) {
 		Vector3[] arr = new Vector3[] {
 
 			new Vector3 (-52f, 0.7f, 46.8f),
 			new Vector3 (-52f, 0.7f, 55.9f),
 			new Vector3 (-59.8f, 0.7f, 46.8f),
-			new Vector3 (-59.8f, 0.7f, -55.9f)
+			new Vector3 (-59.8f, 0.7f, 55.9f)
 		};
 		if (index < arr.Length) {
 			return arr [index];
 		} else {
 			return new Vector3();
+		}
+	}
+
+	protected override Vector3 StartRotations (int index) {
+		Vector3[] arr = new Vector3[] {
+
+			new Vector3 (0, 135f, 0),
+			new Vector3 (0, 90f, 0),
+			new Vector3 (0, 180f, 0),
+			new Vector3 (0, 135f, 0)
+		};
+		if (index < arr.Length) {
+			return arr [index];
+		} else {
+			return new Vector3();
+		}
+	}
+
+	protected override int PlateTimeOuts (int playerCount) {
+		switch (playerCount) {
+		case 2:
+			return 30;
+			break;
+		case 3:
+			return 10;
+			break;
+		case 4:
+			return 0;
+			break;
+		default:
+			return -1;
+			break;
 		}
 	}
 
@@ -32,11 +63,5 @@ public class StartLevel_1 : LevelBehaviour {
 	protected override int GetTimer () {
 		
 		return 60;
-	}
-
-
-	// Update is called once per frame
-	void Update () {
-		
 	}
 }

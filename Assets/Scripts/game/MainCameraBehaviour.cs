@@ -19,5 +19,6 @@ public class MainCameraBehaviour : SoftwareBehaviour {
 	public void PositionCamera() {
 		transform.SetParent (userController.GetComponent<UserController> ().ThisUser.transform);
 		transform.localPosition = cameraDefault;
+		transform.localRotation = Quaternion.Euler (new Vector3(0, 0, 0));
 	}
 }
