@@ -13,7 +13,18 @@ public class GObject : SoftwareBehaviour {
 	/// Database Id of this object on server.
 	/// </summary>
 	private int id = -1;
-
+	/// <summary>
+	/// Store the RigidBody, to avoid unnecassary references to other objects during play.
+	/// </summary>
+	private Rigidbody rigBody;
+	/// <summary>
+	/// Get the RigidBody, when GOjbects is initialized.
+	/// </summary>
+	void Start () {
+		if (gameObject.GetComponent<Rigidbody> () != null) {
+			rigBody = gameObject.GetComponent<Rigidbody> ();
+		}
+	}
 	/// <summary>
 	/// Tells, if the object currently moves or is moved by a user.
 	/// </summary>
@@ -55,13 +66,21 @@ public class GObject : SoftwareBehaviour {
 		updated = true;
 	}
 
-	/*
-	 * Moves GObject according to given direction and pace parameters.
-	 */
+	/// <summary>
+	/// Move the GObject according to direction and given pace.
+	/// Applies changes to RigidBody, to ensure correct physical behaviour,
+	/// only apply to GameObject itself, if RigidBody not available.
+	/// </summary>
+	/// <param name="dir">Dir.</param>
+	/// <param name="pace">Pace.</param>
 	protected void Move(Vector3 dir, float pace){
-		//GetComponent<Rigidbody> ().MovePosition (transform.position + (dir * pace * Time.deltaTime));
-		GetComponent<Rigidbody> ().velocity = dir * pace * Time.deltaTime;
-		transform.position += dir * pace * Time.deltaTime;
+		// Apply change in Position to rigBody
+		if (rigBody != null) {
+			rigBody.MovePosition (transform.position + dir * pace * Time.deltaTime);
+		} else {
+			// Only use GameObject itself, if rigBody was not found.
+			transform.position += dir * pace * Time.deltaTime;
+		}
 		updated = true;
 	}
 
@@ -73,7 +92,6 @@ public class GObject : SoftwareBehaviour {
 
 		if (Time.timeScale != 0) {
 			Vector3 localRot = transform.localRotation.eulerAngles;
-			//localRot.x += mouseRotation.y * rotationFactor;
 			localRot.y += mouseRotation * rotationFactor;
 			transform.localRotation = Quaternion.Euler (localRot);
 			updated = true;

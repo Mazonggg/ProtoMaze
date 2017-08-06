@@ -66,9 +66,12 @@ public abstract class LevelBehaviour : SoftwareBehaviour {
 	/// <summary>
 	/// Creates the SocketObject, when the scene starts.
 	/// Uses the GetTimer to determine time until timeout in level.
+	/// 
+	/// Redefines Gravity in the Game.
 	/// </summary>
 	void Start () {
 
 		SoftwareModel.CreateSocketObject (GetTimer());
+		Physics.gravity = new Vector3 (0, - 30f, 0);
 	}
 }
