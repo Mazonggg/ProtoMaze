@@ -265,7 +265,7 @@ public class SocketObject: SoftwareBehaviour {
 				userData.ObjectHeld.Rotation.y + "_" +
 				userData.ObjectHeld.Rotation.z;
 			}
-            return msg+ System.DateTime.Now.ToString() + "Counter:"+counter++;
+			return msg + "   localtime=" + DateTime.Now.ToString("hh:mm:ss.fff") + "   Counter:"+counter++;
 		} else {
 			return nothingFound;
 		}
