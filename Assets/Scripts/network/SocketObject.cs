@@ -168,7 +168,9 @@ public class SocketObject: SoftwareBehaviour {
 	private void ProcessDownBuf(byte[] buf) {
 
 		string bufString = System.Text.ASCIIEncoding.ASCII.GetString (buf);
-	//	Debug.Log ("ProcessDownBuf: " + bufString);
+		Debug.Log ("ProcessDownBuf: localtime=" + 
+			DateTime.Now.ToString("hh:mm:ss.fff") +
+			"   :   " + bufString);
 		string[] pairs = bufString.Split('&');
 		for (int i = 0; i < pairs.Length; i++) {
 			string[] pair = pairs [i].Split ('=');
@@ -281,14 +283,13 @@ public class SocketObject: SoftwareBehaviour {
 	// Einfach eine Abfrage rein, ob der Socket schon am Arbeiten ist (y).
 
 	/// <summary>
-	/// Update method user to permanently count the ping between client and server
+	/// Update method user to frequently count the ping between client and server
 	/// and send updates of user once per second.
 	/// </summary>
 	void Update() {
 
 		if (socketRunning) {
 			if (Time.realtimeSinceStartup > lastPing + pingInt) {
-				// Debug.Log ("FICK DICH!");
 				lastPing = lastTime = Time.realtimeSinceStartup;
 				sendBuf = System.Text.ASCIIEncoding.ASCII.GetBytes ("PING");
 				sendBytes = socket.SendTo (sendBuf, endPoint);

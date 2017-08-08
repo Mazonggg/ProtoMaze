@@ -78,6 +78,12 @@ public class User : GObject {
 	public void UpdateUser(UpdateData upData) {
 		
 		if (transform.position.x != upData.Position.x || transform.position.y != upData.Position.y || transform.position.z != upData.Position.z) {
+
+
+			// TODO Insert logic to differentiate between moving forward and backwards.
+			// Vector3  direction = (upData.Position - transform.position).normalized - upData.Rotation.normalized;
+			// Debug.Log ("direction: x=" + direction.x + "   y=" + direction.y + "   z=" + direction.z);
+
 			animator.SetFloat ("Forward", 1f);
 			standCounter = 0;
 			if (standLimit < standMax) {
@@ -95,9 +101,8 @@ public class User : GObject {
 				standCounter++;
 			}
 		}
-		bool running = false;
-		animator.SetBool ("Running", running);
-		Move(upData.Position - transform.position, running ? Constants.runSpeed : Constants.moveSpeed);
+		animator.SetBool ("Running", (upData.Position - transform.position).magnitude > Constants.moveSpeed);
+		Move(upData.Position - transform.position, (upData.Position - transform.position).magnitude);
 		transform.localRotation = Quaternion.Euler (upData.Rotation);
 	}
 
