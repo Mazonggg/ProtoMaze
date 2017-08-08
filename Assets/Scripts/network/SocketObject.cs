@@ -58,8 +58,7 @@ public class SocketObject: SoftwareBehaviour {
 
 		foreach (string[] pair in response) {
 			// Check, if session is already in starting state, oder running, otherwise start it.
-			if(pair[0].Equals("state") && (!pair[1].Equals(Constants.sfStarting) || !pair[1].Equals(Constants.sfRunning))) {
-
+			if(pair[0].Equals("state") && !(pair[1].Equals(Constants.sfStarting) || pair[1].Equals(Constants.sfRunning))) {
 				string userId = UserStatics.GetUserId(0).ToString();
 				string sessionId = UserStatics.SessionId.ToString();
 				SoftwareModel.netwRout.UDPRequest (
@@ -168,9 +167,9 @@ public class SocketObject: SoftwareBehaviour {
 	private void ProcessDownBuf(byte[] buf) {
 
 		string bufString = System.Text.ASCIIEncoding.ASCII.GetString (buf);
-		Debug.Log ("ProcessDownBuf: localtime=" + 
-			DateTime.Now.ToString("hh:mm:ss.fff") +
-			"   :   " + bufString);
+	//	Debug.Log ("ProcessDownBuf: localtime=" + 
+	//		DateTime.Now.ToString("hh:mm:ss.fff") +
+	//		"   :   " + bufString);
 		string[] pairs = bufString.Split('&');
 		for (int i = 0; i < pairs.Length; i++) {
 			string[] pair = pairs [i].Split ('=');
@@ -265,7 +264,7 @@ public class SocketObject: SoftwareBehaviour {
 				userData.ObjectHeld.Rotation.y + "_" +
 				userData.ObjectHeld.Rotation.z;
 			}
-			return msg + "   localtime=" + DateTime.Now.ToString("hh:mm:ss.fff") + "   Counter:"+counter++;
+			return msg;
 		} else {
 			return nothingFound;
 		}
