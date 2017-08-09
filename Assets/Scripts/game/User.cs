@@ -102,11 +102,9 @@ public class User : GObject {
 				standCounter++;
 			}
 		}
-		animator.SetBool ("Running", (upData.Position - rigTrans.position).magnitude > Constants.moveSpeed);
-		Debug.Log ("upData.Position = " + upData.Position + "     rigPos = " + rigTrans.position);
-		Debug.Log ("(upData.Position - rigPos) = " + (upData.Position - rigTrans.position) + 
-			"      (upData.Position - rigPos).magnitude) = " + (upData.Position - rigTrans.position).magnitude);
-		Move(upData.Position - rigTrans.position, (upData.Position - rigTrans.position).magnitude);
+		bool running = (upData.Position - rigTrans.position).magnitude > Constants.moveSpeed;
+		animator.SetBool ("Running", running);
+		Move(upData.Position - rigTrans.position, running ? Constants.runSpeed : Constants.moveSpeed);
 		rigTrans.localRotation = Quaternion.Euler (upData.Rotation);
 	}
 
