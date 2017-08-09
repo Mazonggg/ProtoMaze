@@ -67,8 +67,6 @@ public class GObject : SoftwareBehaviour {
 	protected void Move(Vector3 dir, float pace){
 		// Apply change in Position to rigBody
 		if (rigBody != null) {
-			Debug.Log ("Move(): pace=" + pace);
-			Debug.Log ("rigTrans.position=" + rigTrans.position + "  +  dir=" + dir + "  *  pace=" + pace + "  *  Time.deltaTime=" + Time.deltaTime);
 			rigBody.MovePosition (rigTrans.position + dir * pace * Time.deltaTime);
 		} 
 		updated = true;
