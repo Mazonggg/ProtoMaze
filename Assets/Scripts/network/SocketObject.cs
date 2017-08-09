@@ -12,8 +12,7 @@ using System.Net.Sockets;
 /// Handles all UDP communication with the server, while a session is RUNNING, PAUSED or ISSTARTING.
 /// </summary>
 public class SocketObject: SoftwareBehaviour {
-
-	private static string serverError = "Error";
+	
 	private static string nothingFound = "nothingFound";
 
 	private Thread socketThread;
@@ -28,7 +27,6 @@ public class SocketObject: SoftwareBehaviour {
 	private PauseMenu pauseMenu;
 
 	private int levelTimer = 0;
-    private int counter = 0;
 	private bool socketRunning = false;
 
 	public void SetSocket(int timer){
@@ -94,10 +92,8 @@ public class SocketObject: SoftwareBehaviour {
 
 	// storage for upstream data.
 	byte[] sendBuf = new byte[128];
-	int sendBytes = 0;
 	float lastDatagram = 0;
 	float currentTime = 1;
-	int countTicks = 0;
 	/// <summary>
 	/// Tells change in state of CObjects to server.
 	/// </summary>
@@ -122,13 +118,12 @@ public class SocketObject: SoftwareBehaviour {
 		
 	}
 
-	private int counting = 0;
 	private void SendDatagram() {
 		
 		string info = CollectUserData ();
 		if(!info.Equals(nothingFound)){
 			sendBuf = System.Text.ASCIIEncoding.ASCII.GetBytes (info);
-			sendBytes = socket.SendTo (sendBuf, endPoint);
+			socket.SendTo (sendBuf, endPoint);
 		}
 	}
 
@@ -174,7 +169,6 @@ public class SocketObject: SoftwareBehaviour {
 		for (int i = 0; i < pairs.Length; i++) {
 			string[] pair = pairs [i].Split ('=');
 			if (pair [0].Equals ("PING") && pair [1].Equals ("PING")) {
-				int ping = (int) ((Time.realtimeSinceStartup - lastTime) * 1000);
 				pauseMenu.SetPing (((int) ((Time.realtimeSinceStartup - lastTime) * 1000)).ToString());
 				return;
 			} else if (pair [0].Equals ("ui")) {
@@ -185,22 +179,23 @@ public class SocketObject: SoftwareBehaviour {
 				string[] pos = posRot [0].Split('_');
 				string[] rot = posRot [1].Split('_');
 
-				float posX = 999;
-				float posY = 999;
-				float posZ = 999;
+				float posX = 0;
+				float posY = 0;
+				float posZ = 0;
 
 				float.TryParse (pos [0], out posX);
 				float.TryParse (pos [1], out posY);
 				float.TryParse (pos [2], out posZ);
 
-				float rotX = 999;
-				float rotY = 999;
-				float rotZ = 999;
+				float rotX = 0;
+				float rotY = 0;
+				float rotZ = 0;
 
 				float.TryParse (rot [0], out rotX);
 				float.TryParse (rot [1], out rotY);
 				float.TryParse (rot [2], out rotZ);
 
+				//Debug.Log ("posX=" + posX + "     posY=" + posY + "     posZ=" + posZ + "          rotX=" + rotX + "     rotY=" + rotY + "     rotZ=" + rotZ);
 				SoftwareModel.userController.UpdateUser(new UpdateData(user_id, new Vector3(posX, posY, posZ), new Vector3(rotX, rotY, rotZ)));
 			} else if (pair [0].Equals (Constants.sfState)) {
 
@@ -236,7 +231,7 @@ public class SocketObject: SoftwareBehaviour {
 	private string CollectUserData() {
 
 		if (SoftwareModel.userController.ThisUser != null) {
-			UpdateData userData = SoftwareModel.userController.ThisUser.UpdateData;
+			UpdateData userData = SoftwareModel.userController.ThisUser.GetUpdateData ();
 
 			string msg = "t=";
 			if (userData.ObjectHeld == null) {
@@ -269,11 +264,7 @@ public class SocketObject: SoftwareBehaviour {
 			return nothingFound;
 		}
 	}
-
-
-
-
-
+		
 	private float lastTime = 0;
 	private float lastPing = 0;
 	private float pingInt = 1;
@@ -291,7 +282,7 @@ public class SocketObject: SoftwareBehaviour {
 			if (Time.realtimeSinceStartup > lastPing + pingInt) {
 				lastPing = lastTime = Time.realtimeSinceStartup;
 				sendBuf = System.Text.ASCIIEncoding.ASCII.GetBytes ("PING");
-				sendBytes = socket.SendTo (sendBuf, endPoint);
+				socket.SendTo (sendBuf, endPoint);
 				// Send update of User.
 				SendDatagram ();
 			}

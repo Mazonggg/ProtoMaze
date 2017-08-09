@@ -59,6 +59,7 @@ public class UserController: SoftwareBehaviour {
 
 			usr.GetComponent<Rigidbody>().MovePosition( SoftwareModel.GetComponent<LevelBehaviour> ().GetStartPosition (users.Count));
 			usr.transform.localRotation = Quaternion.Euler (SoftwareModel.GetComponent<LevelBehaviour> ().GetStartRotation (users.Count));
+			usr.name = "USER: " + user_name;
 
 			users.Add (usr.GetComponent<User> ());
 			UserStatics.SetUserInfo(users.IndexOf(usr.GetComponent<User> ()),user_id, user_name, user_ref); 

@@ -14,21 +14,14 @@ public class GObject : SoftwareBehaviour {
 	/// </summary>
 	private int id = -1;
 	/// <summary>
-	/// Store the RigidBody, to avoid unnecassary references to other objects during play.
-	/// </summary>
-	private Rigidbody rigBody;
-	/// <summary>
-	/// Get the RigidBody, when GOjbects is initialized.
-	/// </summary>
-	void Start () {
-		if (gameObject.GetComponent<Rigidbody> () != null) {
-			rigBody = gameObject.GetComponent<Rigidbody> ();
-		}
-	}
-	/// <summary>
 	/// Tells, if the object currently moves or is moved by a user.
 	/// </summary>
 	private bool active = false;
+	/// <summary>
+	/// Store the RigidBody, to avoid unnecassary references to other objects during play.
+	/// </summary>
+	protected Rigidbody rigBody;
+	protected Transform rigTrans;
 	public bool Active {
 		get { return active; }
 		set { active = value; }
@@ -48,21 +41,19 @@ public class GObject : SoftwareBehaviour {
 	/// Returns the relevant data for updating the server, for this object.
 	/// </summary>
 	/// <value>The update data.</value>
-	public UpdateData UpdateData {
-		get { 
+	public UpdateData GetUpdateData () {
 			return new UpdateData (
-				id, 
-				new Vector3(transform.position.x,transform.position.y,transform.position.z), 
-				new Vector3(transform.rotation.x,transform.rotation.y,transform.rotation.z)); 
-		}
+			id, 
+			new Vector3(rigTrans.position.x, rigTrans.position.y, rigTrans.position.z), 
+			new Vector3(rigTrans.localRotation.eulerAngles.x, rigTrans.localRotation.eulerAngles.y, rigTrans.localRotation.eulerAngles.z)); 
 	}
 
 	/// <summary>
 	/// Resets all parameter of this GObject.
 	/// </summary>
 	public void Restart() {
-		transform.position = new Vector3 (0, 0, 0);
-		transform.rotation = Quaternion.Euler (0, 0, 0);
+		rigTrans.position = new Vector3 (0, 0, 0);
+		rigTrans.localRotation = Quaternion.Euler (0, 0, 0);
 		updated = true;
 	}
 
@@ -76,11 +67,10 @@ public class GObject : SoftwareBehaviour {
 	protected void Move(Vector3 dir, float pace){
 		// Apply change in Position to rigBody
 		if (rigBody != null) {
-			rigBody.MovePosition (transform.position + dir * pace * Time.deltaTime);
-		} else {
-			// Only use GameObject itself, if rigBody was not found.
-			transform.position += dir * pace * Time.deltaTime;
-		}
+			Debug.Log ("Move(): pace=" + pace);
+			Debug.Log ("rigTrans.position=" + rigTrans.position + "  +  dir=" + dir + "  *  pace=" + pace + "  *  Time.deltaTime=" + Time.deltaTime);
+			rigBody.MovePosition (rigTrans.position + dir * pace * Time.deltaTime);
+		} 
 		updated = true;
 	}
 
@@ -89,12 +79,22 @@ public class GObject : SoftwareBehaviour {
 	/// </summary>
 	/// <param name="mouseRotation">Mouse rotation.</param>
 	protected void Rotate(float mouseRotation, float rotationFactor) {
-
+		
 		if (Time.timeScale != 0) {
-			Vector3 localRot = transform.localRotation.eulerAngles;
+			Vector3 localRot = rigTrans.localRotation.eulerAngles;
 			localRot.y += mouseRotation * rotationFactor;
-			transform.localRotation = Quaternion.Euler (localRot);
+			rigTrans.localRotation = Quaternion.Euler (localRot);
 			updated = true;
 		}
+	}
+
+	/// <summary>
+	/// Cache the RigidBody once, for improved performance.
+	/// </summary>
+	protected void Update () {
+		if (gameObject.GetComponent<Rigidbody> () != null && rigBody == null) {
+			rigBody = gameObject.GetComponent<Rigidbody> ();
+			rigTrans = rigBody.transform;
+		} 
 	}
 }

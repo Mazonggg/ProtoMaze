@@ -57,31 +57,32 @@ public class User : GObject {
 	/// Returns the relevant data for updating the server, for this object.
 	/// </summary>
 	/// <value>The update data.</value>
-	public UpdateData UpdateData {
-		get {
-			Updated = false;
-			if (objectHeld == null) {
-				return new UpdateData (
-					Id, 
-					new Vector3 (transform.position.x,transform.position.y,transform.position.z), 
-					new Vector3 (transform.localRotation.eulerAngles.x, transform.localRotation.eulerAngles.y, transform.localRotation.eulerAngles.z)); 
-			} else {
-				return new UpdateData (
-					Id, 
-					new Vector3 (transform.position.x, transform.position.y, transform.position.z), 
-					new Vector3 (transform.localRotation.eulerAngles.x, transform.localRotation.eulerAngles.y, transform.localRotation.eulerAngles.z),
-					objectHeld.UpdateData); 
-			}
+	public new UpdateData GetUpdateData () {
+		
+		Updated = false;
+		if (objectHeld == null) {
+			return new UpdateData (
+				Id, 
+				new Vector3 (rigTrans.position.x, rigTrans.position.y, rigTrans.position.z), 
+				new Vector3 (rigTrans.localRotation.eulerAngles.x, rigTrans.localRotation.eulerAngles.y, rigTrans.localRotation.eulerAngles.z)); 
+		} else {
+			return new UpdateData (
+				Id, 
+				new Vector3 (rigTrans.position.x, rigTrans.position.y, rigTrans.position.z), 
+				new Vector3 (rigTrans.localRotation.eulerAngles.x, rigTrans.localRotation.eulerAngles.y, rigTrans.localRotation.eulerAngles.z),
+				objectHeld.GetUpdateData ()); 
 		}
 	}
 
-	public void UpdateUser(UpdateData upData) {
+	public void UpdateUser (UpdateData upData) {
 		
-		if (transform.position.x != upData.Position.x || transform.position.y != upData.Position.y || transform.position.z != upData.Position.z) {
+		if (rigTrans.position.x != upData.Position.x ||
+			rigTrans.position.y != upData.Position.y || 
+			rigTrans.position.z != upData.Position.z) {
 
 
 			// TODO Insert logic to differentiate between moving forward and backwards.
-			// Vector3  direction = (upData.Position - transform.position).normalized - upData.Rotation.normalized;
+			// Vector3  direction = (upData.Position - rigPos).normalized - upData.Rotation.normalized;
 			// Debug.Log ("direction: x=" + direction.x + "   y=" + direction.y + "   z=" + direction.z);
 
 			animator.SetFloat ("Forward", 1f);
@@ -101,21 +102,25 @@ public class User : GObject {
 				standCounter++;
 			}
 		}
-		animator.SetBool ("Running", (upData.Position - transform.position).magnitude > Constants.moveSpeed);
-		Move(upData.Position - transform.position, (upData.Position - transform.position).magnitude);
-		transform.localRotation = Quaternion.Euler (upData.Rotation);
+		animator.SetBool ("Running", (upData.Position - rigTrans.position).magnitude > Constants.moveSpeed);
+		Debug.Log ("upData.Position = " + upData.Position + "     rigPos = " + rigTrans.position);
+		Debug.Log ("(upData.Position - rigPos) = " + (upData.Position - rigTrans.position) + 
+			"      (upData.Position - rigPos).magnitude) = " + (upData.Position - rigTrans.position).magnitude);
+		Move(upData.Position - rigTrans.position, (upData.Position - rigTrans.position).magnitude);
+		rigTrans.localRotation = Quaternion.Euler (upData.Rotation);
 	}
 
 	void Start() {
 		animator = GetComponent<Animator> ();
 	}
 
-	void Update(){
+	protected void Update(){
 
+		base.Update ();
 		if (isPlayed && SoftwareModel.GameRunning) {
 			// Capture movement:
 			if ((Input.GetAxis ("Horizontal") != 0 || Input.GetAxis ("Vertical") != 0)) {
-				float angle = transform.localRotation.eulerAngles.y;
+				float angle = rigTrans.localRotation.eulerAngles.y;
 				Vector3 hor = new Vector3(
 					Mathf.Cos ((0 - angle) * Mathf.PI / 180f) * Input.GetAxis ("Horizontal"),
 					0,

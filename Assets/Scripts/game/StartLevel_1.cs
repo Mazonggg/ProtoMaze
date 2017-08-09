@@ -38,16 +38,12 @@ public class StartLevel_1 : LevelBehaviour {
 		switch (playerCount) {
 		case 2:
 			return 30;
-			break;
 		case 3:
 			return 10;
-			break;
 		case 4:
 			return 0;
-			break;
 		default:
 			return -1;
-			break;
 		}
 	}
 
