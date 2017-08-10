@@ -84,7 +84,6 @@ public class SocketObject: SoftwareBehaviour {
 	/// </summary>
 	private void WorkOnSocket(){
 		
-        //Debug.Log("Work");
 		StartCoroutine (TellSocket());
 		StartCoroutine (ListenToSocket());
 		socketRunning = true;
@@ -99,11 +98,9 @@ public class SocketObject: SoftwareBehaviour {
 	/// </summary>
 	/// <returns>The socket.</returns>
 	private IEnumerator TellSocket(){
-       // Debug.Log("Tell");
         yield return new WaitForSeconds(1f);
         SendDatagram();
         while (true) {
-            //Debug.Log("While Tell");
 			// Transmitted data
 			currentTime = Time.realtimeSinceStartup;
 			// Only tick, if changes in game state is found and time since last tick fits tickrate.
@@ -170,9 +167,6 @@ public class SocketObject: SoftwareBehaviour {
 	private void ProcessDownBuf(byte[] buf) {
 
 		string bufString = System.Text.ASCIIEncoding.ASCII.GetString (buf);
-	//	Debug.Log ("ProcessDownBuf: localtime=" + 
-	//		DateTime.Now.ToString("hh:mm:ss.fff") +
-	//		"   :   " + bufString);
 		string[] pairs = bufString.Split('&');
 		for (int i = 0; i < pairs.Length; i++) {
 			string[] pair = pairs [i].Split ('=');
@@ -209,18 +203,15 @@ public class SocketObject: SoftwareBehaviour {
 
 				if (pair [1].Equals (Constants.sfPaused)) {
 					// LOGIC FOR PAUSING THE GAME.	
-				// 	Debug.Log("PAUSED");
 					pauseMenu.TogglePause (true);
 				} else if (pair [1].Equals (Constants.sfRunning)) {
 					// LOGIC TO RESUME THE GAME.
-				//	Debug.Log("RUNNING");
 					pauseMenu.TogglePause (false);
 					// Checks if game was started before and acts accordingly to start it.
 					if (!pauseMenu.GameHasStarted) {
 						pauseMenu.GameHasStarted = true;
 					}
 				}
-				// pauseMenu.ShowState (pair [1]);
 			} else if(pair[0].Equals (Constants.sfTimer)) {
 				int time = 0;
 				int.TryParse (pair [1], out time);

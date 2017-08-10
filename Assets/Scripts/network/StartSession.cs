@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class StartSession : SoftwareBehaviour {
 
-	public GameObject startSessionButton, createSession;
+	public GameObject startSessionButton, createSessionCanvas;
 
     void Start () {
         //createSessionCanvas.SetActive(false);
@@ -30,6 +30,7 @@ public class StartSession : SoftwareBehaviour {
 	/// Starts the next scene.
 	/// </summary>
 	public void LoadNewScene() {
+		gameObject.SetActive (false);
 		SceneManager.LoadScene ("Level_1");
 	}
 }

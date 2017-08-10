@@ -22,6 +22,13 @@ public class UpdateData {
 		get { return objectHeld; }
 	}
 
+	public UpdateData() {
+
+		this.id = -1;
+		this.position = new Vector3 (0, 0, 0);
+		this.rotation = new Vector3 (0, 0, 0);
+	}
+
 	public UpdateData(int id, Vector3 position, Vector3 rotation) {
 
 		this.id = id;

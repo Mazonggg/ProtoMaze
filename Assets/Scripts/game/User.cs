@@ -7,7 +7,7 @@ using UnityEngine;
 /// </summary>
 public class User : GObject {
 
-	public GameObject userInfo;
+	public GameObject userInfo, shortsMesh;
 	private Animator animator;
 
 	private bool isPlayed = false;
@@ -58,19 +58,23 @@ public class User : GObject {
 	/// </summary>
 	/// <value>The update data.</value>
 	public new UpdateData GetUpdateData () {
-		
-		Updated = false;
-		if (objectHeld == null) {
-			return new UpdateData (
-				Id, 
-				new Vector3 (rigTrans.position.x, rigTrans.position.y, rigTrans.position.z), 
-				new Vector3 (rigTrans.localRotation.eulerAngles.x, rigTrans.localRotation.eulerAngles.y, rigTrans.localRotation.eulerAngles.z)); 
+
+		if (rigTrans != null) {
+			Updated = false;
+			if (objectHeld == null) {
+				return new UpdateData (
+					Id, 
+					new Vector3 (rigTrans.position.x, rigTrans.position.y, rigTrans.position.z), 
+					new Vector3 (rigTrans.localRotation.eulerAngles.x, rigTrans.localRotation.eulerAngles.y, rigTrans.localRotation.eulerAngles.z)); 
+			} else {
+				return new UpdateData (
+					Id, 
+					new Vector3 (rigTrans.position.x, rigTrans.position.y, rigTrans.position.z), 
+					new Vector3 (rigTrans.localRotation.eulerAngles.x, rigTrans.localRotation.eulerAngles.y, rigTrans.localRotation.eulerAngles.z),
+					objectHeld.GetUpdateData ()); 
+			}
 		} else {
-			return new UpdateData (
-				Id, 
-				new Vector3 (rigTrans.position.x, rigTrans.position.y, rigTrans.position.z), 
-				new Vector3 (rigTrans.localRotation.eulerAngles.x, rigTrans.localRotation.eulerAngles.y, rigTrans.localRotation.eulerAngles.z),
-				objectHeld.GetUpdateData ()); 
+			return new UpdateData ();
 		}
 	}
 
@@ -110,6 +114,14 @@ public class User : GObject {
 
 	void Start() {
 		animator = GetComponent<Animator> ();
+	}
+
+	/// <summary>
+	/// Recolor the skinMesh of the user.
+	/// </summary>
+	/// <param name="color">Color.</param>
+	public void Recolor(Color color){
+		shortsMesh.GetComponent<Renderer> ().material.color = color;
 	}
 
 	protected void Update(){

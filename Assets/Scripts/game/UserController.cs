@@ -62,6 +62,7 @@ public class UserController: SoftwareBehaviour {
 			usr.name = "USER: " + user_name;
 
 			users.Add (usr.GetComponent<User> ());
+			usr.GetComponent<User> ().Recolor (Constants.ColorForUser(users.Count));
 			UserStatics.SetUserInfo(users.IndexOf(usr.GetComponent<User> ()),user_id, user_name, user_ref); 
 			if (UserStatics.IsMySelf(users.IndexOf(usr.GetComponent<User> ()))) {
 				usr.GetComponent<User> ().IsPlayed = true;

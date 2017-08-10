@@ -31,4 +31,17 @@ public sealed class Constants {
 	public static string sfPConnected = "CONNECTED";
 	public static string sfError = "ERROR";
 	public static string sfHint = "HINT";
+
+	public static Color ColorForUser(int index) {
+		switch (index) {
+			case 2:
+				return new Color (0.7f, 0.0f, 0.0f);
+			case 3:
+				return new Color (0.0f, 0.7f, 0.4f);
+			case 4:
+				return new Color (0.9f, 0.9f, 0.0f);
+			default:
+				return userColor;
+		}
+	}
 }
