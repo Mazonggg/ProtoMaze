@@ -135,17 +135,25 @@ public class SocketObject: SoftwareBehaviour {
 	/// </summary>
 	/// <returns>The to socket.</returns>
 	private IEnumerator ListenToSocket (){
-      //  Debug.Log("Listen");
+
+		int perSecond = 0;
+		float startTime = 0;
         yield return new WaitForSeconds(1f);
-      //  Debug.Log("Listenzwei");
+
 		while (true) {
-       //     Debug.Log("Listen while");
+
+			// TODO perSecond serves to evaluate the framerate currently performed in game
+			perSecond++;
+			if (Time.realtimeSinceStartup - startTime > 1) {
+				pauseMenu.SetPing ("perSecond = " + perSecond);
+				perSecond = 0;
+				startTime = Time.realtimeSinceStartup;
+			}
+
             yield return null;
-        //    Debug.Log("Listendrei");
-            if (socket.Poll(0, SelectMode.SelectRead)) {
-      //          Debug.Log("Listenvier");
+
+			while (socket.Poll(0, SelectMode.SelectRead)) {
                 int bytesReceived = socket.Receive(receiveBuf, 0, receiveBuf.Length, SocketFlags.None);
-      //          Debug.Log("bytes"+bytesReceived);
                 if (bytesReceived > 0) {
 					ProcessDownBuf (receiveBuf);
 				}
@@ -169,7 +177,8 @@ public class SocketObject: SoftwareBehaviour {
 		for (int i = 0; i < pairs.Length; i++) {
 			string[] pair = pairs [i].Split ('=');
 			if (pair [0].Equals ("PING") && pair [1].Equals ("PING")) {
-				pauseMenu.SetPing (((int) ((Time.realtimeSinceStartup - lastTime) * 1000)).ToString());
+				// TODO REPLACED WITH SOCKET POLLING TEST DURING DEVELOPMENT
+				//pauseMenu.SetPing (((int) ((Time.realtimeSinceStartup - lastTime) * 1000)).ToString());
 				return;
 			} else if (pair [0].Equals ("ui")) {
 				
@@ -195,7 +204,6 @@ public class SocketObject: SoftwareBehaviour {
 				float.TryParse (rot [1], out rotY);
 				float.TryParse (rot [2], out rotZ);
 
-				//Debug.Log ("posX=" + posX + "     posY=" + posY + "     posZ=" + posZ + "          rotX=" + rotX + "     rotY=" + rotY + "     rotZ=" + rotZ);
 				SoftwareModel.userController.UpdateUser(new UpdateData(user_id, new Vector3(posX, posY, posZ), new Vector3(rotX, rotY, rotZ)));
 			} else if (pair [0].Equals (Constants.sfState)) {
 
