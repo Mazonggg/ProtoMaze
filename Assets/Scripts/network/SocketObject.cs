@@ -98,9 +98,10 @@ public class SocketObject: SoftwareBehaviour {
 	/// </summary>
 	/// <returns>The socket.</returns>
 	private IEnumerator TellSocket(){
+
         yield return new WaitForSeconds(1f);
         SendDatagram();
-        while (true) {
+        while (socketRunning) {
 			// Transmitted data
 			currentTime = Time.realtimeSinceStartup;
 			// Only tick, if changes in game state is found and time since last tick fits tickrate.
@@ -116,48 +117,64 @@ public class SocketObject: SoftwareBehaviour {
 	}
 
 	private void SendDatagram() {
-		
-		string info = CollectUserData ();
-		if(!info.Equals(nothingFound)){
-			sendBuf = System.Text.ASCIIEncoding.ASCII.GetBytes (info);
-			socket.SendTo (sendBuf, endPoint);
-		}
-	}
+        try {
+            string info = CollectUserData();
+            if (!info.Equals(nothingFound)) {
+                sendBuf = System.Text.ASCIIEncoding.ASCII.GetBytes(info);
+                socket.SendTo(sendBuf, endPoint);
+            }
+        } catch (Exception e) {
+            Debug.Log("SOCKETEXEPTION GECTACHT"+ "Exception caught."+ e);
+        }
+    }     
 
 
 	// storage for upstream data.
 	byte[] receiveBuf = new byte[128];
-	/// <summary>
-	/// Listens to downstream socket, connected to server, and updates state of CObjects accordingly.
-	/// </summary>
-	/// <returns>The to socket.</returns>
-	private IEnumerator ListenToSocket (){
+    /// <summary>
+    /// Listens to downstream socket, connected to server, and updates state of CObjects accordingly.
+    /// </summary>
+    /// <returns>The to socket.</returns>
+    private IEnumerator ListenToSocket(){
 
-		int perSecond = 0;
-		float startTime = 0;
-        yield return new WaitForSeconds(1f);
-
-		while (true) {
-
-			// TODO perSecond serves to evaluate the framerate currently performed in game
-			perSecond++;
-			if (Time.realtimeSinceStartup - startTime > 1) {
-				pauseMenu.SetPing ("perSecond = " + perSecond);
-				perSecond = 0;
-				startTime = Time.realtimeSinceStartup;
-			}
-
+            int perSecond = 0;
+            float startTime = 0;
             yield return null;
 
-			while (socket.Poll(0, SelectMode.SelectRead)) {
-                int bytesReceived = socket.Receive(receiveBuf, 0, receiveBuf.Length, SocketFlags.None);
-                if (bytesReceived > 0) {
-					ProcessDownBuf (receiveBuf);
-				}
-			}
-		}		
-		
-	}
+            while (socketRunning){
+
+                // TODO perSecond serves to evaluate the framerate currently performed in game
+                perSecond++;
+                if (Time.realtimeSinceStartup - startTime > 1) {
+                    pauseMenu.SetPing("perSecond = " + perSecond);
+                    perSecond = 0;
+                    startTime = Time.realtimeSinceStartup;
+                }
+
+                yield return null;
+
+                try
+                {
+                    while (socket.Poll(0, SelectMode.SelectRead) && socketRunning)
+                    {
+                        //  Debug.Log("GEht hier rein UUUND bricht ab?");
+
+                        int bytesReceived = socket.Receive(receiveBuf, 0, receiveBuf.Length, SocketFlags.None);
+                        if (bytesReceived > 0)
+                        {
+                            ProcessDownBuf(receiveBuf);
+                            // Debug.Log(System.Text.ASCIIEncoding.ASCII.GetString(receiveBuf));
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                Debug.Log("SOCKETEXEPTION GECTACHT " +  socketRunning + "      blubb      "+e);
+                }
+
+                }
+
+        }
 
 	/// <summary>
 	/// Processes the content of the buf, received from server.
@@ -215,10 +232,10 @@ public class SocketObject: SoftwareBehaviour {
 			} else if(pair[0].Equals (Constants.sfTimer)) {
 				int time = 0;
 				int.TryParse (pair [1], out time);
-				timerScript.SetTimer (time);
-				if (time <= 0) {
+                socketRunning = timerScript.SetTimer (time);
+				/*if (time <= 0) {
 					pauseMenu.End (0);
-				}
+				}*/
 			}
 		}
 	}
@@ -269,22 +286,38 @@ public class SocketObject: SoftwareBehaviour {
 	private float pingInt = 1;
 
     // War ein Grund warum er abgekackt ist, hat gesendet bevor ueberhaupt was aufgebaut war ..
-	// Einfach eine Abfrage rein, ob der Socket schon am Arbeiten ist (y).
+    // Einfach eine Abfrage rein, ob der Socket schon am Arbeiten ist (y).
 
-	/// <summary>
-	/// Update method user to frequently count the ping between client and server
-	/// and send updates of user once per second.
-	/// </summary>
-	void Update() {
+    /// <summary>
+    /// Update method user to frequently count the ping between client and server
+    /// and send updates of user once per second.
+    /// </summary>
+    void Update() {
+        try {
+            if (socketRunning)
+            {
+                if (Time.realtimeSinceStartup > lastPing + pingInt)
+                {
+                    lastPing = lastTime = Time.realtimeSinceStartup;
+                    sendBuf = System.Text.ASCIIEncoding.ASCII.GetBytes("PING");
+                    socket.SendTo(sendBuf, endPoint);
+                    // Send update of User.
+                    SendDatagram();
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.Log("SOCKETEXEPTION GECTACHT"+ "Exception caught."+ e);
+        }
 
-		if (socketRunning) {
-			if (Time.realtimeSinceStartup > lastPing + pingInt) {
-				lastPing = lastTime = Time.realtimeSinceStartup;
-				sendBuf = System.Text.ASCIIEncoding.ASCII.GetBytes ("PING");
-				socket.SendTo (sendBuf, endPoint);
-				// Send update of User.
-				SendDatagram ();
-			}
-		}
-	}
+    }
+
+
+    public void KillSocket(){
+        socketRunning = false;
+        Debug.Log("KILLLLL" + " ___ ___ "+ socketRunning);
+        pauseMenu.End();
+       // socket.Disconnect(true);
+    }
 }

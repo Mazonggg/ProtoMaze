@@ -31,5 +31,7 @@ public class SoftwareModel : SoftwareBehaviour {
 
 		gameObject.AddComponent<SocketObject> ();
 		gameObject.GetComponent<SocketObject> ().SetSocket (timer);
-	}
+        socketObj = gameObject.GetComponent<SocketObject>();
+
+    }
 }

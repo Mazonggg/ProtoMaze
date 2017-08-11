@@ -85,13 +85,10 @@ public class PauseMenu : SoftwareBehaviour {
 		}
 	}
 
-	public void End(int time) {
+	public void End() {
 
 		if (gameHasStarted) {
 			resumeButton.SetActive (false);
-			if (time <= 0) {
-			
-			}
 			Pause ();
 		}
 	}
