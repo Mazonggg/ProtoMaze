@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StartLevel_1 : LevelBehaviour {
+public class StartLevel_2 : LevelBehaviour {
 
 	public override string SceneName () {
-		return "Level_1";
+		return "Level_2";
 	}
 
 	public override string ExplanationText () {
@@ -15,10 +15,10 @@ public class StartLevel_1 : LevelBehaviour {
 	protected override Vector3 StartPositions (int index) {
 		Vector3[] arr = new Vector3[] {
 
-			new Vector3 (-52f, 0.7f, 46.8f),
-			new Vector3 (-52f, 0.7f, 55.9f),
-			new Vector3 (-59.8f, 0.7f, 46.8f),
-			new Vector3 (-59.8f, 0.7f, 55.9f)
+			new Vector3 (-52f, 0.7f, -46.8f),
+			new Vector3 (-52f, 0.7f, -55.9f),
+			new Vector3 (-59.8f, 0.7f, -46.8f),
+			new Vector3 (-59.8f, 0.7f, -55.9f)
 		};
 		if (index < arr.Length) {
 			return arr [index];
@@ -30,10 +30,10 @@ public class StartLevel_1 : LevelBehaviour {
 	protected override Vector3 StartRotations (int index) {
 		Vector3[] arr = new Vector3[] {
 
-			new Vector3 (0, 135f, 0),
+			new Vector3 (0, 45f, 0),
 			new Vector3 (0, 90f, 0),
-			new Vector3 (0, 180f, 0),
-			new Vector3 (0, 135f, 0)
+			new Vector3 (0, 00f, 0),
+			new Vector3 (0, 45f, 0)
 		};
 		if (index < arr.Length) {
 			return arr [index];
@@ -66,6 +66,6 @@ public class StartLevel_1 : LevelBehaviour {
 	/// <returns>The timer.</returns>
 	protected override int GetTimer () {
 		
-		return 60;
+		return 120;
 	}
 }

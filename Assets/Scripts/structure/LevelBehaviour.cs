@@ -9,6 +9,16 @@ using UnityEngine;
 public abstract class LevelBehaviour : SoftwareBehaviour {
 
 	/// <summary>
+	/// Returns the name of the scene object, that this level represents.
+	/// </summary>
+	/// <returns>The scenes name.</returns>
+	abstract public string SceneName ();
+	/// <summary>
+	/// Gives a brief explanation of the level.
+	/// </summary>
+	/// <returns>The text.</returns>
+	abstract public string ExplanationText ();
+	/// <summary>
 	/// Gets the timer, that determines how much time 
 	/// the user have to complete the level, before timeout.
 	/// </summary>

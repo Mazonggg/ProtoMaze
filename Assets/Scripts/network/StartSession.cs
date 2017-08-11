@@ -6,10 +6,6 @@ using UnityEngine.SceneManagement;
 public class StartSession : SoftwareBehaviour {
 
 	public GameObject startSessionButton, createSessionCanvas;
-
-    void Start () {
-        //createSessionCanvas.SetActive(false);
-    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -31,6 +27,6 @@ public class StartSession : SoftwareBehaviour {
 	/// </summary>
 	public void LoadNewScene() {
 		gameObject.SetActive (false);
-		SceneManager.LoadScene ("Level_1");
+		SceneManager.LoadScene ( gameObject.GetComponent<CreateSession> ().levelBehaviour.SceneName ());
 	}
 }

@@ -79,15 +79,22 @@ public class User : GObject {
 	}
 
 	public void UpdateUser (UpdateData upData) {
-		
-		if (rigTrans.position.x != upData.Position.x ||
-			rigTrans.position.y != upData.Position.y || 
-			rigTrans.position.z != upData.Position.z) {
 
+		bool xEquals = (int)(rigTrans.position.x * 10) == (int)(upData.Position.x * 10);
+		bool yEquals = (int)(rigTrans.position.y * 10) == (int)(upData.Position.y * 10);
+		bool zEquals = (int)(rigTrans.position.z * 10) == (int)(upData.Position.z * 10);
+		Vector3 direction = upData.Position - rigTrans.position;
+
+		if (!(xEquals && yEquals && zEquals)) {
 
 			// TODO Insert logic to differentiate between moving forward and backwards.
 			// Vector3  direction = (upData.Position - rigPos).normalized - upData.Rotation.normalized;
 			// Debug.Log ("direction: x=" + direction.x + "   y=" + direction.y + "   z=" + direction.z);
+			// Debug.Log("Quaternion.Euler (upData.Rotation) = " + Quaternion.Euler (upData.Rotation) + "     upData.Position.normalized = " + upData.Position.normalized);
+			// Debug.Log("upData.Rotation.y = " + upData.Rotation.y + "     upData.Position.normalized = " + upData.Position.normalized);
+
+			float alpha = Mathf.Rad2Deg * Mathf.Atan ( direction.z / direction.x );
+			Debug.Log ( "direction.z = " + direction.z + "     direction.x = " + direction.x + "     upData.Rotation.y = " + upData.Rotation.y + "     alpha = " + alpha);
 
 			animator.SetFloat ("Forward", 1f);
 			standCounter = 0;
@@ -108,7 +115,7 @@ public class User : GObject {
 		}
 		bool running = (upData.Position - rigTrans.position).magnitude > Constants.moveSpeed;
 		animator.SetBool ("Running", running);
-		Move(upData.Position - rigTrans.position, running ? Constants.runSpeed : Constants.moveSpeed);
+		Move(direction, running ? Constants.runSpeed : Constants.moveSpeed);
 		rigTrans.localRotation = Quaternion.Euler (upData.Rotation);
 	}
 

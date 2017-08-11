@@ -6,7 +6,8 @@ using System.Text.RegularExpressions;
 
 public class CreateSession : SoftwareBehaviour {
 
-	public GameObject logInCanvas, mainMenuCanvas, createSessionCanvas, startSessionButton, backButton;
+	public GameObject logInCanvas, mainMenuCanvas, createSessionCanvas, toggleLevelText, explanationText;
+	public LevelBehaviour levelBehaviour;
     public Text user_a, user_b, user_c, user_d, headline;
     private Text[] users;
 
@@ -15,6 +16,8 @@ public class CreateSession : SoftwareBehaviour {
     void Start () {
         createSessionCanvas.SetActive(false);
         users = new Text[] { user_a, user_b, user_c, user_d };
+		// Choose level, since mechanism for choosing is only implemented as hook for further development.
+		ChooseLevel (LevelConstants.GetLevel(currentLevelIndex));
     }
 
     public void goBack() {
@@ -63,6 +66,28 @@ public class CreateSession : SoftwareBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// The index of the current level.
+	/// </summary>
+	private int currentLevelIndex = 0;
+	/// <summary>
+	/// Toggles to the next level in list of all levels in game.
+	/// </summary>
+	public void ToggleNextLevel () {
+		currentLevelIndex = currentLevelIndex > LevelConstants.NumberOfLevels () - 2 ? 0 : ++currentLevelIndex;
+		Debug.Log ("currentLevelIndex = " + currentLevelIndex);
+		ChooseLevel(LevelConstants.GetLevel (currentLevelIndex));
+	}
+
+	/// <summary>
+	/// Chooses level given, for playing in session.
+	/// </summary>
+	private void ChooseLevel (LevelBehaviour lvlBhvr) {
+
+		levelBehaviour = lvlBhvr;
+		toggleLevelText.GetComponent<Text> ().text = "Choose level:   " + levelBehaviour.SceneName ();
+	}
+
     private IEnumerator UpdateLobby(){
 
 		while (true) {
@@ -72,6 +97,8 @@ public class CreateSession : SoftwareBehaviour {
 				new string[] { "req", "sessionId" },
 				new string[] { "getPlayerInSession", userSession });
 			yield return new WaitForSeconds (1f);
+			// Change of explanationText allows for hypothetical level-change, if further levels are implemented later:
+			explanationText.GetComponent<Text>().text = levelBehaviour.ExplanationText ();
 		}
     }
 
