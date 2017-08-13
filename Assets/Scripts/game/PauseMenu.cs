@@ -122,6 +122,7 @@ public class PauseMenu : SoftwareBehaviour {
 			anim.speed = (stop ? 0f : 1f);
 		}
 	}
+
 	public void ShowStartingMenu() {
 
 		startText.GetComponent<Text> ().text = "Start Game";

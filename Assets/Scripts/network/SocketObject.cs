@@ -56,10 +56,9 @@ public class SocketObject: SoftwareBehaviour {
 
 		foreach (string[] pair in response) {
 			// Check, if session is already in running state, otherwise start it.
-			if(pair[0].Equals("state") && !(pair[1].Equals(Constants.sfRunning) || pair[1].Equals(Constants.sfLoading))) {
+			if(pair[0].Equals("state") && !(pair[1].Equals(Constants.sfRunning) || pair[1].Equals(Constants.sfStarting))) {
 				string userId = UserStatics.GetUserId(0).ToString();
 				string sessionId = UserStatics.SessionId.ToString();
-				Debug.Log ("Make UDP request: " + pair [1]);
 				SoftwareModel.netwRout.UDPRequest (
 					NetworkRoutines.EmptyCallback,
 					new string[] { "userId", "timer", "sessionId" }, 
@@ -186,7 +185,6 @@ public class SocketObject: SoftwareBehaviour {
 	private void ProcessDownBuf(byte[] buf) {
 		
 		string bufString = System.Text.ASCIIEncoding.ASCII.GetString (buf);
-		// Debug.Log ("ProcessDownBuf: " + bufString);
 		string[] pairs = bufString.Split('&');
 		for (int i = 0; i < pairs.Length; i++) {
 			string[] pair = pairs [i].Split ('=');
