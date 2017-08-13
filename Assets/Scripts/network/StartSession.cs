@@ -4,16 +4,31 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class StartSession : SoftwareBehaviour {
-	
+
 	// Update is called once per frame
 	void Update () {
 		
 	}
-		
+
+	/// <summary>
+	/// Sends the TCP Request to change Session status to "STARTING",
+	/// Starts the next scene.
+	/// </summary>
+	public void StartTheSession(){
+
+		string sessionId = UserStatics.SessionId.ToString();
+
+		SoftwareModel.netwRout.TCPRequest (
+			LoadNewScene,
+			new string[] { "req", "sessionId" }, 
+			new string[] { "startSession", sessionId });
+		LoadNewScene ();
+	}
+
 	/// <summary>
 	/// Starts the next scene.
 	/// </summary>
-	public void LoadNewScene() {
+	private void LoadNewScene(string[][] response) {
 		gameObject.SetActive (false);
 		SceneManager.LoadScene ( gameObject.GetComponent<CreateSession> ().levelBehaviour.SceneName ());
 	}

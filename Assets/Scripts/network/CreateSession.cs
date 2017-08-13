@@ -6,9 +6,9 @@ using System.Text.RegularExpressions;
 
 public class CreateSession : SoftwareBehaviour {
 
-	public GameObject logInCanvas, mainMenuCanvas, createSessionCanvas, toggleLevelText, explanationText, buttonHolder;
+	public GameObject logInCanvas, mainMenuCanvas, createSessionCanvas, toggleLevelText, explanationText; //, buttonHolder;
 	public LevelBehaviour levelBehaviour;
-	public Text user_a, user_b, user_c, user_d, headline, leveltext;
+	public Text user_a, user_b, user_c, user_d, headline;//, leveltext;
     private Text[] users;
 
 	private IEnumerator updateLobby;
@@ -24,8 +24,8 @@ public class CreateSession : SoftwareBehaviour {
             new string[] { "req", "userId" },
             new string[] { "leaveSession", UserStatics.IdSelf.ToString() });
 
-		leveltext.gameObject.SetActive (false);
-		buttonHolder.SetActive (true);
+		//leveltext.gameObject.SetActive (false);
+		//buttonHolder.SetActive (true);
         mainMenuCanvas.SetActive(true);
         createSessionCanvas.SetActive(false);
     }
@@ -75,7 +75,6 @@ public class CreateSession : SoftwareBehaviour {
 	/// </summary>
 	public void ToggleNextLevel () {
 		currentLevelIndex = currentLevelIndex > LevelConstants.NumberOfLevels () - 2 ? 0 : ++currentLevelIndex;
-		Debug.Log ("currentLevelIndex = " + currentLevelIndex);
 		ChooseLevel(LevelConstants.GetLevel (currentLevelIndex));
 	}
 
@@ -84,12 +83,22 @@ public class CreateSession : SoftwareBehaviour {
 	/// </summary>
 	private void ChooseLevel (LevelBehaviour lvlBhvr) {
 
-		levelBehaviour = lvlBhvr;
-		toggleLevelText.GetComponent<Text> ().text = "Choose level:   " + levelBehaviour.SceneName ();
+		AssignLevel (lvlBhvr);
+		//leveltext.text = "Level:   " + levelBehaviour.SceneName ();
 		SoftwareModel.netwRout.TCPRequest(
 			NetworkRoutines.EmptyCallback,
 			new string[] { "req", "sessionId", "levelIndex" },
 			new string[] { "changeLevel", UserStatics.SessionId.ToString() , currentLevelIndex.ToString() });
+	}
+
+	/// <summary>
+	/// Assigns the level to be played in session.
+	/// </summary>
+	/// <param name="lvlBhvr">Lvl bhvr.</param>
+	private void AssignLevel(LevelBehaviour lvlBhvr) {
+
+		levelBehaviour = lvlBhvr;
+		toggleLevelText.GetComponent<Text> ().text = "Choose level:   " + levelBehaviour.SceneName ();
 	}
 
     private IEnumerator UpdateLobby(){
@@ -117,16 +126,13 @@ public class CreateSession : SoftwareBehaviour {
         foreach (string[] pair in response){
 
 			if (pair [0].Equals ("playerInSession")) {
-
 				ret += pair [1];
 			}
 			string pattern = @"//";
 			string[] usernames = Regex.Split (ret, pattern);
 
-
 			for (int i = 0; i < usernames.Length; i++) {
-
-				Debug.Log ("UpdateView: UserStatics.GetUserName (UserStatics.IdSelf)=" + UserStatics.GetUserName (UserStatics.IdSelf));
+				
 				users [i].text = usernames [i];
 				users [i].fontStyle = FontStyle.Bold;
 				if (UserStatics.GetUserName (UserStatics.IdSelf).Equals (usernames [i])) {
@@ -144,26 +150,25 @@ public class CreateSession : SoftwareBehaviour {
 				int levelindex = 0;
 				int.TryParse (pair [1], out levelindex);
 				currentLevelIndex = levelindex;
-				ChooseLevel(LevelConstants.GetLevel (levelindex));
-				Debug.Log ("changeLevel to: " + currentLevelIndex);
+				AssignLevel(LevelConstants.GetLevel (levelindex));
 			}
 
 			// Check if the session is ment to be started.
 			if (pair [0].Equals (Constants.sfState) && pair [1].Equals (Constants.sfStarting)) {
 				// Start the session.
-				gameObject.GetComponent<StartSession> ().LoadNewScene ();
+				gameObject.GetComponent<StartSession> ().StartTheSession ();
 			}
 
 			// Check if this client occupies the first seat in session.
 			// This grants right to choose level and start the game.
-			Debug.Log("usernames[0] = " + usernames[0] + "     nameSelf = " + UserStatics.NameSelf);
+			/*Debug.Log("usernames[0] = " + usernames[0] + "     nameSelf = " + UserStatics.NameSelf);
 			if (!usernames [0].Equals (UserStatics.NameSelf)) {
 				buttonHolder.SetActive (false);
 				leveltext.gameObject.SetActive (true);
 			} else {
 				buttonHolder.SetActive (true);
 				leveltext.gameObject.SetActive (false);
-			}
+			}*/
 		}
     }
 

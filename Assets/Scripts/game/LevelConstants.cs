@@ -23,6 +23,10 @@ public sealed class LevelConstants {
 	/// <returns>The level.</returns>
 	/// <param name="index">Index.</param>
 	public static LevelBehaviour GetLevel (int index) {
-		return allLevels [index];
+		if (index >= 0 && index < allLevels.Length) {
+			return allLevels [index];
+		} else {
+			return allLevels [0];
+		}
 	}
 }

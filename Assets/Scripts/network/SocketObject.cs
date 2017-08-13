@@ -41,7 +41,7 @@ public class SocketObject: SoftwareBehaviour {
 		SoftwareModel.netwRout.TCPRequest (
 			HandleSessionStart,
 			new string[] { "req", "sessionId", "userId" }, 
-			new string[] { "startSession", sessionId, userId });
+			new string[] { "initSession", sessionId, userId });
 	}
 	/// <summary>
 	/// Handles the session start. Assigns the other users in the game-session to the respective GameObjects.

@@ -94,12 +94,12 @@ public class User : GObject {
 			// Debug.Log("upData.Rotation.y = " + upData.Rotation.y + "     upData.Position.normalized = " + upData.Position.normalized);
 
 			float alpha = Mathf.Rad2Deg * Mathf.Atan ( direction.x / direction.z ) - 90f;
-			Debug.Log ( 
+			/*Debug.Log ( 
 				"direction.z = " + direction.z + 
 				"     direction.x = " + direction.x + 
 				"     upData.Rotation.y = " + upData.Rotation.y + 
 				"     alpha = " + alpha + 
-				"     diff = " + (upData.Rotation.y - alpha));
+				"     diff = " + (upData.Rotation.y - alpha));*/
 
 			animator.SetFloat ("Forward", 1f);
 			standCounter = 0;

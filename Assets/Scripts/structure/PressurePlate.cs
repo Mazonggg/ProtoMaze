@@ -18,7 +18,7 @@ public class PressurePlate : SoftwareBehaviour {
 	/// <returns>The out.</returns>
 	private static int timeOut = -1;
 	public static int TimeOut {
-		set { timeOut = value; Debug.Log ("TimeOut=" + timeOut); }
+		set { timeOut = value; }
 	}
 	/// <summary>
 	/// Determines, if this PressurePlate is active, 

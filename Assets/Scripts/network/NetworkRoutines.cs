@@ -60,7 +60,7 @@ public class NetworkRoutines : SoftwareBehaviour {
 	/// <param name="param">Parameter.</param>
 	private IEnumerator MakeRequest(Action<string[][]> callback, string request, bool waitForResponse) {
 		
-		 Debug.Log ("MakeRequest: " + request);
+		// Debug.Log ("MakeRequest: " + request);
 		using (connection = UnityWebRequest.Get (request)) {
 
 			//if (!waitForResponse) {
