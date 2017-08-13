@@ -41,7 +41,7 @@ public class SocketObject: SoftwareBehaviour {
 		SoftwareModel.netwRout.TCPRequest (
 			HandleSessionStart,
 			new string[] { "req", "sessionId", "userId" }, 
-			new string[] { "initSession", sessionId, userId });
+			new string[] { "startSession", sessionId, userId });
 	}
 	/// <summary>
 	/// Handles the session start. Assigns the other users in the game-session to the respective GameObjects.
@@ -56,9 +56,10 @@ public class SocketObject: SoftwareBehaviour {
 
 		foreach (string[] pair in response) {
 			// Check, if session is already in running state, otherwise start it.
-			if(pair[0].Equals("state") && !pair[1].Equals(Constants.sfRunning)) {
+			if(pair[0].Equals("state") && !(pair[1].Equals(Constants.sfRunning) || pair[1].Equals(Constants.sfLoading))) {
 				string userId = UserStatics.GetUserId(0).ToString();
 				string sessionId = UserStatics.SessionId.ToString();
+				Debug.Log ("Make UDP request: " + pair [1]);
 				SoftwareModel.netwRout.UDPRequest (
 					NetworkRoutines.EmptyCallback,
 					new string[] { "userId", "timer", "sessionId" }, 
@@ -185,7 +186,7 @@ public class SocketObject: SoftwareBehaviour {
 	private void ProcessDownBuf(byte[] buf) {
 		
 		string bufString = System.Text.ASCIIEncoding.ASCII.GetString (buf);
-		Debug.Log ("ProcessDownBuf: " + bufString);
+		// Debug.Log ("ProcessDownBuf: " + bufString);
 		string[] pairs = bufString.Split('&');
 		for (int i = 0; i < pairs.Length; i++) {
 			string[] pair = pairs [i].Split ('=');

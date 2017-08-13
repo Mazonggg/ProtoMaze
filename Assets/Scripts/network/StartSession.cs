@@ -21,7 +21,7 @@ public class StartSession : SoftwareBehaviour {
 		SoftwareModel.netwRout.TCPRequest (
 			LoadNewScene,
 			new string[] { "req", "sessionId" }, 
-			new string[] { "startSession", sessionId });
+			new string[] { "loadSession", sessionId });
 	}
 
 	/// <summary>

@@ -26,6 +26,7 @@ public sealed class Constants {
 	public static string sfTimer = "timer";
 	public static string sfState = "state";
 	public static string sfPaused = "PAUSED";
+	public static string sfLoading = "ISLOADING";
 	public static string sfStarting = "ISSTARTING";
 	public static string sfRunning = "RUNNING";
 	public static string sfPConnected = "CONNECTED";
