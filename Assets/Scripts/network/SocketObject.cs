@@ -55,8 +55,8 @@ public class SocketObject: SoftwareBehaviour {
 		string user_name = "";
 
 		foreach (string[] pair in response) {
-			// Check, if session is already in starting state, oder running, otherwise start it.
-			if(pair[0].Equals("state") && !(pair[1].Equals(Constants.sfStarting) || pair[1].Equals(Constants.sfRunning))) {
+			// Check, if session is already in running state, otherwise start it.
+			if(pair[0].Equals("state") && !pair[1].Equals(Constants.sfRunning)) {
 				string userId = UserStatics.GetUserId(0).ToString();
 				string sessionId = UserStatics.SessionId.ToString();
 				SoftwareModel.netwRout.UDPRequest (
@@ -83,7 +83,8 @@ public class SocketObject: SoftwareBehaviour {
 	/// Connection issues can be caught here.
 	/// </summary>
 	private void WorkOnSocket(){
-		
+
+		Debug.Log ("WorkOnSocket()");
 		StartCoroutine (TellSocket());
 		StartCoroutine (ListenToSocket());
 		socketRunning = true;
@@ -182,8 +183,9 @@ public class SocketObject: SoftwareBehaviour {
 	/// </summary>
 	/// <param name="buf">Buffer.</param>
 	private void ProcessDownBuf(byte[] buf) {
-
+		
 		string bufString = System.Text.ASCIIEncoding.ASCII.GetString (buf);
+		Debug.Log ("ProcessDownBuf: " + bufString);
 		string[] pairs = bufString.Split('&');
 		for (int i = 0; i < pairs.Length; i++) {
 			string[] pair = pairs [i].Split ('=');

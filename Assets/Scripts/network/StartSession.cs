@@ -22,7 +22,6 @@ public class StartSession : SoftwareBehaviour {
 			LoadNewScene,
 			new string[] { "req", "sessionId" }, 
 			new string[] { "startSession", sessionId });
-		LoadNewScene ();
 	}
 
 	/// <summary>
