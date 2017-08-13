@@ -16,6 +16,11 @@ public class UserStatics {
 		get { return idSelf; }
 		set { idSelf = value; }
 	}
+	private static string nameSelf = "";
+	public static string NameSelf {
+		get { return nameSelf; }
+		set { nameSelf = value; }
+	}
 	private static int[] userIds = {-1, -1, -1, -1};
 	private static string[] userNames = {"", "", "", ""};
 	private static string[] userRefs = {"", "", "", ""};
@@ -53,12 +58,6 @@ public class UserStatics {
 	public static bool IsMySelf(int index_in_game){
 
 		return idSelf == userIds [index_in_game];
-	}
-
-	private static bool isCreater = false;
-	public static bool IsCreater {
-		get { return isCreater; }
-		set { isCreater = value; }
 	}
 		
 	/// <summary>
@@ -112,7 +111,8 @@ public class UserStatics {
 	/// <param name="user_name">User name.</param>
 	public static void SetUserLoggedIn(int user_id, string user_name) {
 		SetUserInfo(0, user_id, user_name, "");
-		IdSelf = user_id;
+		idSelf = user_id;
+		nameSelf = user_name;
 	}
 
 	/// <summary>

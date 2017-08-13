@@ -6,9 +6,9 @@ using System.Text.RegularExpressions;
 
 public class CreateSession : SoftwareBehaviour {
 
-	public GameObject logInCanvas, mainMenuCanvas, createSessionCanvas, toggleLevelText, explanationText;
+	public GameObject logInCanvas, mainMenuCanvas, createSessionCanvas, toggleLevelText, explanationText, buttonHolder;
 	public LevelBehaviour levelBehaviour;
-    public Text user_a, user_b, user_c, user_d, headline;
+	public Text user_a, user_b, user_c, user_d, headline, leveltext;
     private Text[] users;
 
 	private IEnumerator updateLobby;
@@ -16,16 +16,16 @@ public class CreateSession : SoftwareBehaviour {
     void Start () {
         createSessionCanvas.SetActive(false);
         users = new Text[] { user_a, user_b, user_c, user_d };
-		// Choose level, since mechanism for choosing is only implemented as hook for further development.
-		ChooseLevel (LevelConstants.GetLevel(currentLevelIndex));
     }
 
-    public void goBack() {
+    public void GoBack() {
 		SoftwareModel.netwRout.TCPRequest(
             ResetUserInfo,
             new string[] { "req", "userId" },
             new string[] { "leaveSession", UserStatics.IdSelf.ToString() });
 
+		leveltext.gameObject.SetActive (false);
+		buttonHolder.SetActive (true);
         mainMenuCanvas.SetActive(true);
         createSessionCanvas.SetActive(false);
     }
@@ -35,7 +35,6 @@ public class CreateSession : SoftwareBehaviour {
 	}
 
     private void ResetUserInfo(string[][] response) {
-
         UserStatics.SetUserInfo(0, UserStatics.IdSelf, UserStatics.GetUserName(UserStatics.IdSelf), "");
     }
 
@@ -60,6 +59,7 @@ public class CreateSession : SoftwareBehaviour {
 				UserStatics.SessionId = SsIdTmp;
 				mainMenuCanvas.SetActive(false);
 				createSessionCanvas.SetActive(true);
+				ChooseLevel (LevelConstants.GetLevel(currentLevelIndex));
                 StartUpdateLobby();
                 return;
 			}
@@ -86,6 +86,10 @@ public class CreateSession : SoftwareBehaviour {
 
 		levelBehaviour = lvlBhvr;
 		toggleLevelText.GetComponent<Text> ().text = "Choose level:   " + levelBehaviour.SceneName ();
+		SoftwareModel.netwRout.TCPRequest(
+			NetworkRoutines.EmptyCallback,
+			new string[] { "req", "sessionId", "levelIndex" },
+			new string[] { "changeLevel", UserStatics.SessionId.ToString() , currentLevelIndex.ToString() });
 	}
 
     private IEnumerator UpdateLobby(){
@@ -119,6 +123,7 @@ public class CreateSession : SoftwareBehaviour {
 			string pattern = @"//";
 			string[] usernames = Regex.Split (ret, pattern);
 
+
 			for (int i = 0; i < usernames.Length; i++) {
 
 				Debug.Log ("UpdateView: UserStatics.GetUserName (UserStatics.IdSelf)=" + UserStatics.GetUserName (UserStatics.IdSelf));
@@ -135,10 +140,29 @@ public class CreateSession : SoftwareBehaviour {
 				}
 			}
 
+			if (pair [0].Equals (Constants.sfLevelindex)) {
+				int levelindex = 0;
+				int.TryParse (pair [1], out levelindex);
+				currentLevelIndex = levelindex;
+				ChooseLevel(LevelConstants.GetLevel (levelindex));
+				Debug.Log ("changeLevel to: " + currentLevelIndex);
+			}
+
 			// Check if the session is ment to be started.
 			if (pair [0].Equals (Constants.sfState) && pair [1].Equals (Constants.sfStarting)) {
 				// Start the session.
 				gameObject.GetComponent<StartSession> ().LoadNewScene ();
+			}
+
+			// Check if this client occupies the first seat in session.
+			// This grants right to choose level and start the game.
+			Debug.Log("usernames[0] = " + usernames[0] + "     nameSelf = " + UserStatics.NameSelf);
+			if (!usernames [0].Equals (UserStatics.NameSelf)) {
+				buttonHolder.SetActive (false);
+				leveltext.gameObject.SetActive (true);
+			} else {
+				buttonHolder.SetActive (true);
+				leveltext.gameObject.SetActive (false);
 			}
 		}
     }

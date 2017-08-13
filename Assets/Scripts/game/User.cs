@@ -93,8 +93,13 @@ public class User : GObject {
 			// Debug.Log("Quaternion.Euler (upData.Rotation) = " + Quaternion.Euler (upData.Rotation) + "     upData.Position.normalized = " + upData.Position.normalized);
 			// Debug.Log("upData.Rotation.y = " + upData.Rotation.y + "     upData.Position.normalized = " + upData.Position.normalized);
 
-			float alpha = Mathf.Rad2Deg * Mathf.Atan ( direction.z / direction.x );
-			/*Debug.Log ( "direction.z = " + direction.z + "     direction.x = " + direction.x + "     upData.Rotation.y = " + upData.Rotation.y + "     alpha = " + alpha);*/
+			float alpha = Mathf.Rad2Deg * Mathf.Atan ( direction.x / direction.z ) - 90f;
+			Debug.Log ( 
+				"direction.z = " + direction.z + 
+				"     direction.x = " + direction.x + 
+				"     upData.Rotation.y = " + upData.Rotation.y + 
+				"     alpha = " + alpha + 
+				"     diff = " + (upData.Rotation.y - alpha));
 
 			animator.SetFloat ("Forward", 1f);
 			standCounter = 0;
@@ -113,7 +118,7 @@ public class User : GObject {
 				standCounter++;
 			}
 		}
-		bool running = (upData.Position - rigTrans.position).magnitude > Constants.moveSpeed;
+		bool running = direction.magnitude > Constants.moveSpeed;
 		animator.SetBool ("Running", running);
 		Move(direction, running ? Constants.runSpeed : Constants.moveSpeed);
 		rigTrans.localRotation = Quaternion.Euler (upData.Rotation);
