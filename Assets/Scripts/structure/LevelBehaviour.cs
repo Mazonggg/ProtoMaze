@@ -74,13 +74,14 @@ public abstract class LevelBehaviour : SoftwareBehaviour {
 		return PlateTimeOuts (playerCount);
 	}
 	/// <summary>
-	/// Creates the SocketObject, when the scene starts.
+	/// Creates the PlateControllers and SocketObject, when the scene starts.
 	/// Uses the GetTimer to determine time until timeout in level.
 	/// 
-	/// Redefines Gravity in the Game.
+	/// Redefines Gravity in the Game for a more natural feel when objects are falling.
 	/// </summary>
 	void Start () {
 
+		SoftwareModel.CreatePlateController ();
 		SoftwareModel.CreateSocketObject (GetTimer());
 		Physics.gravity = new Vector3 (0, - 30f, 0);
 	}

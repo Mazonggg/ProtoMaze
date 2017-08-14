@@ -5,6 +5,7 @@ using UnityEngine;
 using System;
 using System.Threading;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Net;
 using System.Net.Sockets;
 
@@ -45,7 +46,8 @@ public class SocketObject: SoftwareBehaviour {
 	}
 	/// <summary>
 	/// Handles the session start. Assigns the other users in the game-session to the respective GameObjects.
-	/// Starts socket, if necessary.
+	/// 
+	/// Adds the plates and objects to server and Starts socket, if necessary.
 	/// </summary>
 	/// <param name="response">Response.</param>
 	private void HandleSessionStart(string[][] response) {
@@ -53,12 +55,24 @@ public class SocketObject: SoftwareBehaviour {
 		string user_ref = "";
 		int user_id = 0;
 		string user_name = "";
+		string sessionId = UserStatics.SessionId.ToString ();
+		bool startedSocket = false;
 
 		foreach (string[] pair in response) {
 			// Check, if session is already in running state, otherwise start it.
-			if(pair[0].Equals("state") && !(pair[1].Equals(Constants.sfRunning) || pair[1].Equals(Constants.sfStarting))) {
-				string userId = UserStatics.GetUserId(0).ToString();
-				string sessionId = UserStatics.SessionId.ToString();
+			if (pair [0].Equals ("state") && !(pair [1].Equals (Constants.sfRunning) || pair [1].Equals (Constants.sfStarting))) {
+
+				startedSocket = true;
+				string plateIds = "";
+				for (int i = 0; i < SoftwareModel.PlateContr.GetPlateCount (); i++) {
+					plateIds += i + (i < SoftwareModel.PlateContr.GetPlateCount () - 1 ? "//" : "");
+				}
+				SoftwareModel.netwRout.TCPRequest (
+					CollectPlateIds,
+					new string[] { "req", "sessionId", "plateIds" }, 
+					new string[] { "addPlatesToSession", sessionId, plateIds });
+
+				string userId = UserStatics.GetUserId (0).ToString ();
 				SoftwareModel.netwRout.UDPRequest (
 					NetworkRoutines.EmptyCallback,
 					new string[] { "userId", "timer", "sessionId" }, 
@@ -72,10 +86,27 @@ public class SocketObject: SoftwareBehaviour {
 				SoftwareModel.userController.AddUser (user_ref, user_id, user_name);
 			}
 		}
+		// Collect the plateIds, if the session was started by somebody else:
+		if (!startedSocket) {
+			CollectPlateIds ();
+		}
 		pauseMenu = GameObject.Find ("PauseMenuController").GetComponent<PauseMenu> ();
 		timerScript = GameObject.Find ("TimerText").GetComponent<TimerScript> ();
 
 		WorkOnSocket ();
+	}
+
+	/// <summary>
+	/// Collect the ids of the plates in the session.
+	/// </summary>
+	/// <param name="response">Response.</param>
+	private void CollectPlateIds(params string[][] response) {
+
+		string sessionId = UserStatics.SessionId.ToString ();
+		SoftwareModel.netwRout.TCPRequest (
+			SoftwareModel.PlateContr.AssignThePlateIds,
+			new string[] { "req", "sessionId" }, 
+			new string[] { "getPlatesInSession", sessionId });
 	}
 
 	/// <summary>
@@ -84,7 +115,6 @@ public class SocketObject: SoftwareBehaviour {
 	/// </summary>
 	private void WorkOnSocket(){
 
-		Debug.Log ("WorkOnSocket()");
 		StartCoroutine (TellSocket());
 		StartCoroutine (ListenToSocket());
 		socketRunning = true;
@@ -137,25 +167,12 @@ public class SocketObject: SoftwareBehaviour {
     /// </summary>
     /// <returns>The to socket.</returns>
     private IEnumerator ListenToSocket(){
-
-            int perSecond = 0;
-            float startTime = 0;
+		
             yield return null;
-
             while (socketRunning){
 
-                // TODO perSecond serves to evaluate the framerate currently performed in game
-                perSecond++;
-                if (Time.realtimeSinceStartup - startTime > 1) {
-                    pauseMenu.SetPing("perSecond = " + perSecond);
-                    perSecond = 0;
-                    startTime = Time.realtimeSinceStartup;
-                }
-
                 yield return null;
-
-                try
-                {
+                try {
                     while (socket.Poll(0, SelectMode.SelectRead) && socketRunning)
                     {
                         //  Debug.Log("GEht hier rein UUUND bricht ab?");
@@ -164,17 +181,13 @@ public class SocketObject: SoftwareBehaviour {
                         if (bytesReceived > 0)
                         {
                             ProcessDownBuf(receiveBuf);
-                            // Debug.Log(System.Text.ASCIIEncoding.ASCII.GetString(receiveBuf));
                         }
                     }
                 }
-                catch (Exception e)
-                {
-                Debug.Log("SOCKETEXEPTION GECTACHT " +  socketRunning + "      blubb      "+e);
+                catch (Exception e) {
+                	Debug.Log("SOCKETEXEPTION GECTACHT " +  socketRunning + "      blubb      "+e);
                 }
-
-                }
-
+        	}
         }
 
 	/// <summary>
@@ -189,16 +202,15 @@ public class SocketObject: SoftwareBehaviour {
 		for (int i = 0; i < pairs.Length; i++) {
 			string[] pair = pairs [i].Split ('=');
 			if (pair [0].Equals ("PING") && pair [1].Equals ("PING")) {
-				// TODO REPLACED WITH SOCKET POLLING TEST DURING DEVELOPMENT
-				//pauseMenu.SetPing (((int) ((Time.realtimeSinceStartup - lastTime) * 1000)).ToString());
+				pauseMenu.SetPing (((int) ((Time.realtimeSinceStartup - lastTime) * 1000)).ToString());
 				return;
 			} else if (pair [0].Equals ("ui")) {
 				
 				int user_id = -1;
 				int.TryParse (pair [1], out user_id);
-				string[] posRot = pairs [i + 1].Split ('=')[1].Split(';');
-				string[] pos = posRot [0].Split('_');
-				string[] rot = posRot [1].Split('_');
+				string[] posRot = pairs [i + 1].Split ('=') [1].Split (';');
+				string[] pos = posRot [0].Split ('_');
+				string[] rot = posRot [1].Split ('_');
 
 				float posX = 0;
 				float posY = 0;
@@ -216,7 +228,7 @@ public class SocketObject: SoftwareBehaviour {
 				float.TryParse (rot [1], out rotY);
 				float.TryParse (rot [2], out rotZ);
 
-				SoftwareModel.userController.UpdateUser(new UpdateData(user_id, new Vector3(posX, posY, posZ), new Vector3(rotX, rotY, rotZ)));
+				SoftwareModel.userController.UpdateUser (new UpdateData (user_id, new Vector3 (posX, posY, posZ), new Vector3 (rotX, rotY, rotZ)));
 			} else if (pair [0].Equals (Constants.sfState)) {
 
 				if (pair [1].Equals (Constants.sfPaused)) {
@@ -230,13 +242,22 @@ public class SocketObject: SoftwareBehaviour {
 						pauseMenu.GameHasStarted = true;
 					}
 				}
-			} else if(pair[0].Equals (Constants.sfTimer)) {
+			} else if (pair [0].Equals (Constants.sfTimer)) {
 				int time = 0;
 				int.TryParse (pair [1], out time);
-                socketRunning = timerScript.SetTimer (time);
-				/*if (time <= 0) {
-					pauseMenu.End (0);
-				}*/
+				socketRunning = timerScript.SetTimer (time);
+			} else if (pair [0].Equals ("os")) {
+				string pattern = @"//";
+				string pattern2 = @"##";
+				string[] statesStrings = Regex.Split (pair[1], pattern);
+
+				foreach (string stateString in statesStrings) {
+					string[] statePair = Regex.Split (stateString, pattern2);
+					int plateId = -1;
+					int.TryParse (statePair [0], out plateId);
+					bool st = statePair [1].Equals ("1");
+					SoftwareModel.PlateContr.SetPlateState (plateId, st);
+				}
 			}
 		}
 	}
@@ -252,9 +273,9 @@ public class SocketObject: SoftwareBehaviour {
 
 			string msg = "t=";
 			if (userData.ObjectHeld == null) {
-				msg += "1";
+				msg += "A";
 			} else {
-				msg += "2";
+				msg += "B";
 			}
 
 			msg += "&ui=" + userData.Id;
@@ -317,8 +338,6 @@ public class SocketObject: SoftwareBehaviour {
 
     public void KillSocket(){
         socketRunning = false;
-        Debug.Log("KILLLLL" + " ___ ___ "+ socketRunning);
         pauseMenu.End();
-       // socket.Disconnect(true);
     }
 }

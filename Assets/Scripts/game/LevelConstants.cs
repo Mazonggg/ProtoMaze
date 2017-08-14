@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public sealed class LevelConstants {
+public sealed class LevelConstants : SoftwareBehaviour{
 
 	private static LevelBehaviour[] allLevels = new LevelBehaviour [] {
 		new StartLevel_1 (),

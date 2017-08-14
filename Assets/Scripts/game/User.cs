@@ -136,7 +136,7 @@ public class User : GObject {
 		shortsMesh.GetComponent<Renderer> ().material.color = color;
 	}
 
-	protected void Update(){
+	protected new void Update(){
 
 		base.Update ();
 		if (isPlayed && SoftwareModel.GameRunning) {

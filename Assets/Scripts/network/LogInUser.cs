@@ -20,9 +20,7 @@ public class LogInUser : SoftwareBehaviour {
 	public void LoginUser() {
 
 		string name = inputName.GetComponent<InputField>().text;
-		Debug.Log (SoftwareModel);
 		string pwd = SoftwareModel.netwRout.Md5Sum(inputPwd.GetComponent<InputField> ().text);
-
 
 		SoftwareModel.netwRout.TCPRequest(
 			HandleLogin, 

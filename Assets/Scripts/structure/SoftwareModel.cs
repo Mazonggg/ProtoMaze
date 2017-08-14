@@ -13,12 +13,16 @@ public class SoftwareModel : SoftwareBehaviour {
 
 	public UserController userController;
 	public NetworkRoutines netwRout;
+	public DoorScript doorScript;
 
 	private SocketObject socketObj;
-
 	public SocketObject SocketObj {
 		get { return socketObj; }
-		set { socketObj = value; }
+	}
+
+	private PlateController plateContr;
+	public PlateController PlateContr {
+		get { return plateContr; }
 	}
 
 	private bool gameRunning = false;
@@ -28,10 +32,15 @@ public class SoftwareModel : SoftwareBehaviour {
 	}
 
 	public void CreateSocketObject(int timer){
-
 		gameObject.AddComponent<SocketObject> ();
 		gameObject.GetComponent<SocketObject> ().SetSocket (timer);
         socketObj = gameObject.GetComponent<SocketObject>();
-
     }
+
+	public void CreatePlateController() {
+		gameObject.AddComponent<PlateController> ();
+		plateContr = gameObject.GetComponent<PlateController>();
+
+		plateContr.AddPlates(FindObjectsOfType (typeof(PressurePlate)) as PressurePlate[]);
+	}
 }

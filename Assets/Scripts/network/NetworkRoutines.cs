@@ -59,29 +59,26 @@ public class NetworkRoutines : SoftwareBehaviour {
 	/// <returns>The request.</returns>
 	/// <param name="param">Parameter.</param>
 	private IEnumerator MakeRequest(Action<string[][]> callback, string request, bool waitForResponse) {
-		
-		// Debug.Log ("MakeRequest: " + request);
+
 		using (connection = UnityWebRequest.Get (request)) {
 
-			//if (!waitForResponse) {
-			//	connection.Send ();
-			//	yield return null;
-			//} else {
-				yield return connection.Send ();
-			
+			yield return connection.Send ();
+
+			try {
 				if (connection.isError) {
-					 Debug.Log (serverError + connection.error);
+					Debug.Log (serverError + connection.error);
 				} else {
 					string response = connection.downloadHandler.text;
 					// Checks if the request responses with an error
 					if (response.StartsWith (serverError)) {
-						 Debug.Log (serverError + response);
+						Debug.Log (serverError + response);
 					} else {
-						 Debug.Log (serverResponse + response);
 						callback (CompileResponse (response));
 					}
 				}
-		//	}
+			}  catch (Exception e) {
+				Debug.Log("NetworkRoutines.MakeRequest -> Exception: "+ e);
+			}
 		}
 	}
 

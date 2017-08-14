@@ -8,9 +8,9 @@ using UnityEngine;
 /// that could potentially slow down the flow of the game. Thus
 /// it mostly uses the methods given by unity engine.
 /// </summary>
-public class PressurePlate : SoftwareBehaviour {
+public class PressurePlate : GObject {
 
-	public GameObject lightActive, ligtInactive;
+	public GameObject lightActive, lightInactive;
 	/// <summary>
 	/// Sets the time elapsed, before plate is deactivated.
 	/// Implemented static to work with 
@@ -29,6 +29,7 @@ public class PressurePlate : SoftwareBehaviour {
 		get { return isActive; }
 	}
 	private float timeWhenLeft = 0;
+
 	/// <summary>
 	/// Deactivate light, that signals "active" status of the plate.
 	/// This prevents issues with initilisation of objects.
@@ -36,25 +37,24 @@ public class PressurePlate : SoftwareBehaviour {
 	void Start () {
 		lightActive.SetActive (false);
 	}
+
 	/// <summary>
-	/// Constantly called while game is running.
+	/// Sets the state of the plate.
 	/// </summary>
-	void Update () {
-		if (timeOut > 0 && isActive && timeWhenLeft + timeOut <= Time.realtimeSinceStartup) {
-			isActive = false;
-			lightActive.SetActive (false);
-			ligtInactive.SetActive (true);
-		}
+	/// <param name="plateIsActive">If set to <c>true</c> plate is active.</param>
+	public void SetPlateActive (bool plateIsActive) {
+
+		isActive = plateIsActive;	
+		lightActive.SetActive (plateIsActive);
+		lightInactive.SetActive (!plateIsActive);
 	}
+		
 	/// <summary>
 	/// Catches the event, that a collision has started touching this collider.
 	/// </summary>
 	/// <param name="collision">Collision.</param>
 	void OnCollisionEnter (Collision collision) {
-		isActive = true;	
-		lightActive.SetActive (true);
-		ligtInactive.SetActive (false);
-		timeWhenLeft = Time.realtimeSinceStartup;
+		SendActivation ();
 	}
 
 	/// <summary>
@@ -62,6 +62,16 @@ public class PressurePlate : SoftwareBehaviour {
 	/// </summary>
 	/// <param name="collision">Collision.</param>
 	void OnCollisionExit (Collision collision) {
-		timeWhenLeft = Time.realtimeSinceStartup;
+		SendActivation ();
+	}
+
+	/// <summary>
+	/// Activates the plate on server.
+	/// </summary>
+	private void SendActivation() {
+		SoftwareModel.netwRout.TCPRequest (
+			NetworkRoutines.EmptyCallback,
+			new string[] { "req", "sessionId", "plateId", "timeout" }, 
+			new string[] { "activatePlate", UserStatics.SessionId.ToString (), Id.ToString (), timeOut.ToString () });
 	}
 }
