@@ -14,6 +14,7 @@ public class SoftwareModel : SoftwareBehaviour {
 	public UserController userController;
 	public NetworkRoutines netwRout;
 	public DoorScript doorScript;
+	public FinisherPlate finisherPlate;
 
 	private SocketObject socketObj;
 	public SocketObject SocketObj {

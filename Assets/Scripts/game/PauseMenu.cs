@@ -8,7 +8,8 @@ using UnityEngine.SceneManagement;
 
 public class PauseMenu : SoftwareBehaviour {
 	
-	public GameObject resumeButton, quitButton, pauseMenuCanvas, startMenuCanvas, mainCamera, startText, startButton;
+	public GameObject resumeButton, quitButton, pauseMenuCanvas, startMenuCanvas, mainCamera, startText, startButton, hudCanvas;
+	public Text winText;
 	public GameObject pingText, timerText;
 
 	private bool gamePaused = false;
@@ -138,5 +139,19 @@ public class PauseMenu : SoftwareBehaviour {
 	public void SetPing(string state) {
 
 		pingText.GetComponent<Text> ().text = "Ping: " + state;
+	}
+
+	/// <summary>
+	/// Called when session is finished. Shows menu and elapsed time accordingly.
+	/// </summary>
+	/// <param name="timeElapsed">Time elapsed.</param>
+	public void FinishSession(int timeElapsed) {
+
+		if (gameHasStarted) {
+			winText.text = "You won in " + timeElapsed + " seconds !";
+			hudCanvas.SetActive (false);
+			resumeButton.SetActive (false);
+			Pause ();
+		}
 	}
 }

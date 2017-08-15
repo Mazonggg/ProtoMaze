@@ -241,6 +241,11 @@ public class SocketObject: SoftwareBehaviour {
 					if (!pauseMenu.GameHasStarted) {
 						pauseMenu.GameHasStarted = true;
 					}
+				} else if (pair [1].Equals (Constants.sfFinished)) {
+					// LOGIC FOR FINISHING THE GAME.	
+					socketRunning = false;
+					SoftwareModel.finisherPlate.SetPlateActive ();	
+					pauseMenu.FinishSession (levelTimer - TimerScript.RestTime);
 				}
 			} else if (pair [0].Equals (Constants.sfTimer)) {
 				int time = 0;
@@ -335,7 +340,9 @@ public class SocketObject: SoftwareBehaviour {
 
     }
 
-
+	/// <summary>
+	/// Ends the communication of the socket and calls PauseMenu to end the session.
+	/// </summary>
     public void KillSocket(){
         socketRunning = false;
         pauseMenu.End();

@@ -5,9 +5,14 @@ using UnityEngine.UI;
 
 public class TimerScript : SoftwareBehaviour {
 
+	private static int restTime;
+	public static int RestTime {
+		get { return restTime; }
+	}
 
     // Update is called once per frame
     public bool SetTimer (int time) {
+		restTime = time;
 		if (time > 0) {
 			gameObject.GetComponent<Text> ().text = ConvertSeconds (time);
 			gameObject.GetComponent<Text> ().color = Constants.textColor;

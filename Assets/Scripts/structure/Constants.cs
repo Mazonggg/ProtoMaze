@@ -29,6 +29,7 @@ public sealed class Constants {
 	public static string sfLoading = "ISLOADING";
 	public static string sfStarting = "ISSTARTING";
 	public static string sfRunning = "RUNNING";
+	public static string sfFinished = "FINISHED";
 	public static string sfPConnected = "CONNECTED";
 	public static string sfError = "ERROR";
 	public static string sfHint = "HINT";
