@@ -148,7 +148,7 @@ public class PauseMenu : SoftwareBehaviour {
 	public void FinishSession(int timeElapsed) {
 
 		if (gameHasStarted) {
-			winText.text = "You won in " + timeElapsed + " seconds !";
+			winText.text = "You have won in " + timeElapsed + " seconds !";
 			hudCanvas.SetActive (false);
 			resumeButton.SetActive (false);
 			Pause ();
