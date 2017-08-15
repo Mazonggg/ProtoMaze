@@ -29,10 +29,10 @@ public class PlateController : SoftwareBehaviour {
 		for (int i = 0; i < platesInScene.Count; i++) {
 			if (platesInScene [i].Id == plateId && i < platesInScene.Count) {
 				platesInScene [i].SetPlateActive (plateIsActive);
-				// check, if one of the plates is inactive, meaning the door is closed.
-				if (!platesInScene [i].IsActive) {
-					allPlatesAreActive = false;
-				}
+			}
+			// check, if one of the plates is inactive, meaning the door is closed.
+			if (!platesInScene [i].IsActive) {
+				allPlatesAreActive = false;
 			}
 		}
 		// Tell the door, if it is supposed to open:

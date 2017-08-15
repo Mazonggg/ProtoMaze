@@ -130,7 +130,7 @@ public class SocketObject: SoftwareBehaviour {
 	/// <returns>The socket.</returns>
 	private IEnumerator TellSocket(){
 
-        yield return new WaitForSeconds(1f);
+		yield return new WaitForSeconds(1f);
         SendDatagram();
         while (socketRunning) {
 			// Transmitted data

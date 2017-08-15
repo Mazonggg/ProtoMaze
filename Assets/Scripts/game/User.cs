@@ -156,7 +156,10 @@ public class User : GObject {
 			} 
 			animator.SetFloat ("Forward", Input.GetAxis ("Vertical"));
 			// Capture rotation:
-			Rotate (Input.GetAxisRaw("Mouse X"), Constants.rotationFactor);
+			float rotation = Input.GetAxisRaw ("Mouse X");
+			if (rotation != 0) {
+				Rotate (rotation, Constants.rotationFactor);
+			}
 			// Capture running:
 			animator.SetBool ("Running", Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift));
 		}

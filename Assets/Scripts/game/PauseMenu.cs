@@ -8,9 +8,9 @@ using UnityEngine.SceneManagement;
 
 public class PauseMenu : SoftwareBehaviour {
 	
-	public GameObject resumeButton, quitButton, pauseMenuCanvas, startMenuCanvas, mainCamera, startText, startButton, hudCanvas;
+	public GameObject resumeButton, quitButton, pauseMenuCanvas, startMenuCanvas, mainCamera, startText, startButton, itemHolder;
 	public Text winText;
-	public GameObject pingText, timerText;
+	public GameObject pingText;
 
 	private bool gamePaused = false;
 	private bool GamePaused {
@@ -149,7 +149,7 @@ public class PauseMenu : SoftwareBehaviour {
 
 		if (gameHasStarted) {
 			winText.text = "You have won in " + timeElapsed + " seconds !";
-			hudCanvas.SetActive (false);
+			itemHolder.SetActive (false);
 			resumeButton.SetActive (false);
 			Pause ();
 		}

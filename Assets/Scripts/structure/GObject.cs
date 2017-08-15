@@ -53,15 +53,6 @@ public class GObject : SoftwareBehaviour {
 	}
 
 	/// <summary>
-	/// Resets all parameter of this GObject.
-	/// </summary>
-	public void Restart() {
-		rigTrans.position = new Vector3 (0, 0, 0);
-		rigTrans.localRotation = Quaternion.Euler (0, 0, 0);
-		updated = true;
-	}
-
-	/// <summary>
 	/// Move the GObject according to direction and given pace.
 	/// Applies changes to RigidBody, to ensure correct physical behaviour,
 	/// only apply to GameObject itself, if RigidBody not available.
