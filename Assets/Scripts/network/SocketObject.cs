@@ -10,26 +10,29 @@ using System.Net;
 using System.Net.Sockets;
 
 /// <summary>
-/// Handles all UDP communication with the server, while a session is RUNNING, PAUSED or ISSTARTING.
+/// Handles all UDP communication with the server, while a socket is alive.
 /// </summary>
 public class SocketObject: SoftwareBehaviour {
-	
+	// Flag for script internal processing:
 	private static string nothingFound = "nothingFound";
-
-	private Thread socketThread;
+	// Holds the connection to the socket on server:
 	private Socket socket;
-
+	// Objects to setup communication path:
 	private static int port = 8050;
 	private static IPAddress IPv4 = IPAddress.Parse("81.169.245.94");
-
 	private IPEndPoint endPoint = new IPEndPoint(IPv4, port);
-
+	// Storage of frequently referenced scripts to avoid leak of perfomance.
 	private TimerScript timerScript;
 	private PauseMenu pauseMenu;
-
+	// Determines lifetime of session and thus the socket.
 	private int levelTimer = 0;
 	private bool socketRunning = false;
 
+	/// <summary>
+	/// Sets up the socket. Takes the timer, that determines the lifetime of the socket
+	/// and thus the time to complete the level.
+	/// </summary>
+	/// <param name="timer">Timer.</param>
 	public void SetSocket(int timer){
 		
 		levelTimer = timer;
@@ -47,7 +50,9 @@ public class SocketObject: SoftwareBehaviour {
 	/// <summary>
 	/// Handles the session start. Assigns the other users in the game-session to the respective GameObjects.
 	/// 
-	/// Adds the plates and objects to server and Starts socket, if necessary.
+	/// Adds the plates to server and Starts socket, if none of the other users in the session has done so.
+	/// 
+	/// CALLBACK FUNCTION FOR TCP-Request.
 	/// </summary>
 	/// <param name="response">Response.</param>
 	private void HandleSessionStart(string[][] response) {
@@ -98,6 +103,8 @@ public class SocketObject: SoftwareBehaviour {
 
 	/// <summary>
 	/// Collect the ids of the plates in the session.
+	/// 
+	/// CALLBACK FUNCTION FOR TCP-Request.
 	/// </summary>
 	/// <param name="response">Response.</param>
 	private void CollectPlateIds(params string[][] response) {
@@ -111,7 +118,6 @@ public class SocketObject: SoftwareBehaviour {
 
 	/// <summary>
 	/// Starts to work on socket.
-	/// Connection issues can be caught here.
 	/// </summary>
 	private void WorkOnSocket(){
 
@@ -147,6 +153,9 @@ public class SocketObject: SoftwareBehaviour {
 		
 	}
 
+	/// <summary>
+	/// Sends a datagram with gathered information to socket.
+	/// </summary>
 	private void SendDatagram() {
         try {
             string info = CollectUserData();
@@ -155,11 +164,10 @@ public class SocketObject: SoftwareBehaviour {
                 socket.SendTo(sendBuf, endPoint);
             }
         } catch (Exception e) {
-            Debug.Log("SOCKETEXEPTION GECTACHT"+ "Exception caught."+ e);
+			Debug.Log("Socketexception caught: SendDatagram(): "+ e);
         }
     }     
-
-
+		
 	// storage for upstream data.
 	byte[] receiveBuf = new byte[128];
     /// <summary>
@@ -175,23 +183,20 @@ public class SocketObject: SoftwareBehaviour {
                 try {
                     while (socket.Poll(0, SelectMode.SelectRead) && socketRunning)
                     {
-                        //  Debug.Log("GEht hier rein UUUND bricht ab?");
-
                         int bytesReceived = socket.Receive(receiveBuf, 0, receiveBuf.Length, SocketFlags.None);
-                        if (bytesReceived > 0)
-                        {
+                        if (bytesReceived > 0) {
                             ProcessDownBuf(receiveBuf);
                         }
                     }
                 }
                 catch (Exception e) {
-                	Debug.Log("SOCKETEXEPTION GECTACHT " +  socketRunning + "      blubb      "+e);
+					Debug.Log("Socketexception caught: ListenToSocket(); "+ e);
                 }
         	}
         }
 
 	/// <summary>
-	/// Processes the content of the buf, received from server.
+	/// Processes the content of the buf, received via datagram from server.
 	/// checks, if content is valid, and sorts the information.
 	/// </summary>
 	/// <param name="buf">Buffer.</param>
@@ -316,15 +321,15 @@ public class SocketObject: SoftwareBehaviour {
     // Einfach eine Abfrage rein, ob der Socket schon am Arbeiten ist (y).
 
     /// <summary>
-    /// Update method user to frequently count the ping between client and server
-    /// and send updates of user once per second.
+	/// Frequently called by unity engine.
+	/// 
+    /// Update method user to count the ping between client and server
+    /// and send updates of user once per second, to keep connection to socket "alive".
     /// </summary>
     void Update() {
         try {
-            if (socketRunning)
-            {
-                if (Time.realtimeSinceStartup > lastPing + pingInt)
-                {
+            if (socketRunning) {
+                if (Time.realtimeSinceStartup > lastPing + pingInt) {
                     lastPing = lastTime = Time.realtimeSinceStartup;
                     sendBuf = System.Text.ASCIIEncoding.ASCII.GetBytes("PING");
                     socket.SendTo(sendBuf, endPoint);
@@ -333,9 +338,8 @@ public class SocketObject: SoftwareBehaviour {
                 }
             }
         }
-        catch (Exception e)
-        {
-            Debug.Log("SOCKETEXEPTION GECTACHT"+ "Exception caught."+ e);
+        catch (Exception e) {
+			Debug.Log("Socketexception caught: Update(): "+ e);
         }
 
     }

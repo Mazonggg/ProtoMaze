@@ -25,10 +25,6 @@ public abstract class LevelBehaviour : SoftwareBehaviour {
 	/// <returns>The timer.</returns>
 	abstract protected int GetTimer ();
 	/// <summary>
-	/// Finishs the level.
-	/// </summary>
-	abstract protected void FinishLevel ();
-	/// <summary>
 	/// Declares the starting positions for the users.
 	/// </summary>
 	/// <returns>The positions.</returns>

@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+/// <summary>
+/// Starts the session.
+/// </summary>
 public class StartSession : SoftwareBehaviour {
-
-	// Update is called once per frame
-	void Update () {
-		
-	}
 
 	/// <summary>
 	/// Sends the TCP Request to change Session status to "STARTING",
@@ -26,6 +24,8 @@ public class StartSession : SoftwareBehaviour {
 
 	/// <summary>
 	/// Starts the next scene.
+	/// 
+	/// CALLBACK FUNCTION FOR TCP-Request.
 	/// </summary>
 	private void LoadNewScene(string[][] response) {
 		gameObject.SetActive (false);

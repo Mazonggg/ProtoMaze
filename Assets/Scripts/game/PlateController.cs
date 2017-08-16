@@ -3,11 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Text.RegularExpressions;
 
+/// <summary>
+/// Controlls the behaviour of the PressurePlates
+/// </summary>
 public class PlateController : SoftwareBehaviour {
 
 	private List<PressurePlate> platesInScene = new List<PressurePlate> ();
 	private DoorScript doorScript;
 
+	/// <summary>
+	/// Adds plates to the list of contained PressurePlates
+	/// </summary>
+	/// <param name="plates">Plates.</param>
 	public void AddPlates(PressurePlate[] plates) {
 
 		for (int i = 0; i < plates.Length; i++) {
@@ -15,14 +22,20 @@ public class PlateController : SoftwareBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// Gets the plate count.
+	/// </summary>
+	/// <returns>The plate count.</returns>
 	public int GetPlateCount() {
 		return platesInScene.Count;
 	}
 
 	/// <summary>
 	/// Sets the states for all PressurePlates in the current Scene.
+	/// Tells the DoorScript, if all PressurePlates are currently active.
 	/// </summary>
-	/// <param name="platesAreActive">Plates are active.</param>
+	/// <param name="plateId">Plate identifier.</param>
+	/// <param name="plateIsActive">If set to <c>true</c> plate is active.</param>
 	public void SetPlateState(int plateId, bool plateIsActive) {
 		
 		bool allPlatesAreActive = true;
@@ -40,7 +53,9 @@ public class PlateController : SoftwareBehaviour {
 	}
 
 	/// <summary>
-	/// Callback for Network, that assigns the database Ids to the plates.
+	/// Assigns the database ids of server to the PressurePlates.
+	/// 
+	/// CALLBACK FUNCTION FOR TCP-Request.
 	/// </summary>
 	/// <param name="response">Response.</param>
 	public void AssignThePlateIds(string[][] response) {

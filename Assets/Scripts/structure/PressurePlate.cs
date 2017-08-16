@@ -9,7 +9,7 @@ using UnityEngine;
 /// it mostly uses the methods given by unity engine.
 /// </summary>
 public class PressurePlate : GObject {
-
+	// GameObject parameters
 	public GameObject lightActive, lightInactive;
 	/// <summary>
 	/// Sets the time elapsed, before plate is deactivated.
@@ -28,8 +28,6 @@ public class PressurePlate : GObject {
 	public bool IsActive {
 		get { return isActive; }
 	}
-	private float timeWhenLeft = 0;
-
 	/// <summary>
 	/// Deactivate light, that signals "active" status of the plate.
 	/// This prevents issues with initilisation of objects.
@@ -37,7 +35,6 @@ public class PressurePlate : GObject {
 	void Start () {
 		lightActive.SetActive (false);
 	}
-
 	/// <summary>
 	/// Sets the state of the plate.
 	/// </summary>
@@ -48,7 +45,6 @@ public class PressurePlate : GObject {
 		lightActive.SetActive (plateIsActive);
 		lightInactive.SetActive (!plateIsActive);
 	}
-		
 	/// <summary>
 	/// Catches the event, that a collision has started touching this collider.
 	/// </summary>
@@ -56,7 +52,6 @@ public class PressurePlate : GObject {
 	void OnCollisionEnter (Collision collision) {
 		SendActivation ();
 	}
-
 	/// <summary>
 	/// Catches the event, that a collision has stopped touching this collider.
 	/// </summary>
@@ -64,9 +59,8 @@ public class PressurePlate : GObject {
 	void OnCollisionExit (Collision collision) {
 		SendActivation ();
 	}
-
 	/// <summary>
-	/// Activates the plate on server.
+	/// Activates the plate on server via TCP request.
 	/// </summary>
 	private void SendActivation() {
 		SoftwareModel.netwRout.TCPRequest (

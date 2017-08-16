@@ -7,9 +7,11 @@ using UnityEngine;
 /// Handles creation of GameObjects representing the users in a game-session.
 /// </summary>
 public class UserController: SoftwareBehaviour {
-
+	// GameObject parameters.
 	public GameObject userPrefab, pauseMenuController;
-
+	/// <summary>
+	/// List of all users currently participating in session.
+	/// </summary>
 	private List<User> users = new List<User>();
 	public User ThisUser {
 		get { 
@@ -32,18 +34,9 @@ public class UserController: SoftwareBehaviour {
 		get { return users.Count; }
 	}
 
-	/*/// <summary>
-	/// Gets the identifier of the user in database.
-	/// </summary>
-	/// <returns>The identifier.</returns>
-	/// <param name="usr">Usr.</param>
-	public int GetIndex(User usr) {
-
-		return users.IndexOf (usr);
-	}*/
-
 	/// <summary>
 	/// Adds the user to the gamescene and this handlers list.
+	/// Adjusts the PressurePlates according to number of players in session.
 	/// </summary>
 	/// <param name="user_ref">User reference in session (a, b, c or d).</param>
 	/// <param name="user_id">User identifier in database.</param>
@@ -59,6 +52,7 @@ public class UserController: SoftwareBehaviour {
 
 			usr.GetComponent<Rigidbody>().MovePosition( SoftwareModel.GetComponent<LevelBehaviour> ().GetStartPosition (users.Count));
 			usr.transform.localRotation = Quaternion.Euler (SoftwareModel.GetComponent<LevelBehaviour> ().GetStartRotation (users.Count));
+			// Alter name of GameObject for clarification between GameObjects.
 			usr.name = "USER: " + user_name;
 
 			users.Add (usr.GetComponent<User> ());
@@ -75,7 +69,9 @@ public class UserController: SoftwareBehaviour {
 	}
 
 	/// <summary>
-	/// Updates the user.
+	/// Frequently called by unity engine.
+	/// 
+	/// Updates the user, that is identified by UpdateData object.
 	/// </summary>
 	/// <param name="user_update">User update.</param>
 	public void UpdateUser (UpdateData user_update) {

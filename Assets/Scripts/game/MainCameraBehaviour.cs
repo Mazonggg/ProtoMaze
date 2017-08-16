@@ -2,11 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Handles the behaviour of the main camera, while playing a level.
+/// </summary>
 public class MainCameraBehaviour : SoftwareBehaviour {
 	
 	private Vector3 cameraDefault = new Vector3 (3f, 15f, -15f);
 	public GameObject userController;
-	// Update is called once per frame
+
+	/// <summary>
+	/// Frequently called by unity engine.
+	/// 
+	/// Tillts the camera according to vertical movement of the mouse input.
+	/// </summary>
 	void Update () {
 
 		if (SoftwareModel.GameRunning) {
@@ -16,6 +24,9 @@ public class MainCameraBehaviour : SoftwareBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// Positions the camera behind the played user GameObject, so it moves with it.
+	/// </summary>
 	public void PositionCamera() {
 		transform.SetParent (userController.GetComponent<UserController> ().ThisUser.transform);
 		transform.localPosition = cameraDefault;

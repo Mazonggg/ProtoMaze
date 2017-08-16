@@ -4,34 +4,46 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Text.RegularExpressions;
 
-
+/// <summary>
+/// Holds all function for joining a Session and controlling the respective Menu.
+/// </summary>
 public class JoinSession : SoftwareBehaviour {
-
+	// GameObject parameters:
     public GameObject logInCanvas, mainMenuCanvas, JoinSessionCanvas, backButton;
     public GameObject JoinButton;
     public GameObject content;
 
+	/// <summary>
+	/// Called by unity engine, when gameObject is instantiated.
+	/// 
+	/// Hides the menu when game is opened.
+	/// </summary>
     void Start () {
 
         JoinSessionCanvas.SetActive(false);
-    }
-		
-	// Update is called once per frame
-	void Update () {
-		
 	}
 
+	/// <summary>
+	/// Navigates back to MainMenu.
+	/// </summary>
     public void GoBack() {
 
         mainMenuCanvas.SetActive(true);
         JoinSessionCanvas.SetActive(false);
     }
 
+	/// <summary>
+	/// Delegates to get the current list of all available sessions on server.
+	/// </summary>
 	public void RefreshSessions() {
 
 		GetSessions ();
 	}
 
+	/// <summary>
+	/// Adds the buttons to the list of all available sessions on server.
+	/// </summary>
+	/// <param name="sessionList">Session list.</param>
     private void AddButtons(string[][] sessionList) {
 
         for (var i = content.transform.childCount - 1; i >= 1; i--) {
@@ -66,6 +78,10 @@ public class JoinSession : SoftwareBehaviour {
 		}
     }
 
+	/// <summary>
+	/// Fetches list of all available sessions from server with TCP request.
+	/// 
+	/// </summary>
     public void GetSessions() {
 		
 		SoftwareModel.netwRout.TCPRequest(
@@ -74,6 +90,12 @@ public class JoinSession : SoftwareBehaviour {
 			new string[] { "getSessions", UserStatics.IdSelf.ToString() });
     }
 
+	/// <summary>
+	/// Compiles datagram and causes the Menu to add the buttons for the sessions.
+	/// 
+	/// CALLBACK FUNCTION FOR TCP-Request.
+	/// </summary>
+	/// <param name="response">Response.</param>
     private void ListAllSessions(string[][] response) {
 
         string ret = "";

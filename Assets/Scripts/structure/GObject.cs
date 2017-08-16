@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
 /// <summary>
 /// Base-object for every movable object in a level.
 /// </summary>
 public class GObject : SoftwareBehaviour {
-
 
 	/// <summary>
 	/// Database Id of this object on server.
@@ -30,7 +28,6 @@ public class GObject : SoftwareBehaviour {
 		get { return active; }
 		set { active = value; }
 	}
-
 	/// <summary>
 	/// true, if changed since last time data where referenced.
 	/// </summary>
@@ -39,8 +36,6 @@ public class GObject : SoftwareBehaviour {
 		get { return updated; }
 		set { updated = value; }
 	}
-
-
 	/// <summary>
 	/// Returns the relevant data for updating the server, for this object.
 	/// </summary>
@@ -56,6 +51,7 @@ public class GObject : SoftwareBehaviour {
 	/// Move the GObject according to direction and given pace.
 	/// Applies changes to RigidBody, to ensure correct physical behaviour,
 	/// only apply to GameObject itself, if RigidBody not available.
+	/// Marks the object as updated.
 	/// </summary>
 	/// <param name="dir">Dir.</param>
 	/// <param name="pace">Pace.</param>
@@ -69,19 +65,20 @@ public class GObject : SoftwareBehaviour {
 
 	/// <summary>
 	/// Rotate the user according to mouseRotation.
+	/// marks the object as updated.
 	/// </summary>
 	/// <param name="mouseRotation">Mouse rotation.</param>
 	protected void Rotate(float mouseRotation, float rotationFactor) {
-		
-		if (Time.timeScale != 0) {
-			Vector3 localRot = rigTrans.localRotation.eulerAngles;
-			localRot.y += mouseRotation * rotationFactor;
-			rigTrans.localRotation = Quaternion.Euler (localRot);
-			updated = true;
-		}
+
+		Vector3 localRot = rigTrans.localRotation.eulerAngles;
+		localRot.y += mouseRotation * rotationFactor;
+		rigTrans.localRotation = Quaternion.Euler (localRot);
+		updated = true;
 	}
 
 	/// <summary>
+	/// Frequently called by unity engine.
+	/// 
 	/// Cache the RigidBody once, for improved performance.
 	/// </summary>
 	protected void Update () {

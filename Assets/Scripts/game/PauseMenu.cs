@@ -6,12 +6,19 @@ using UnityEngine.Networking;
 
 using UnityEngine.SceneManagement;
 
+/// <summary>
+/// Handles the behaviour of the pause menu, while playing a level.
+/// </summary>
 public class PauseMenu : SoftwareBehaviour {
-	
+
+	// GameObject parameters.
 	public GameObject resumeButton, quitButton, pauseMenuCanvas, startMenuCanvas, mainCamera, startText, startButton, itemHolder;
 	public Text winText;
 	public GameObject pingText;
 
+	/// <summary>
+	/// Determines, if game is currently paused.
+	/// </summary>
 	private bool gamePaused = false;
 	private bool GamePaused {
 		set {
@@ -20,6 +27,9 @@ public class PauseMenu : SoftwareBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// Tells, if the game has been started before in the current level.
+	/// </summary>
 	private bool gameHasStarted = false;
 	private bool startedBefore = false;
 	public bool GameHasStarted {
@@ -38,13 +48,22 @@ public class PauseMenu : SoftwareBehaviour {
 		animators.Add (anim);
 	}
 
+	/// <summary>
+	/// Called by unity engine, when gameObject is instantiated.
+	/// 
+	/// Hides the PauseMenu and shows the menu for starting the game in the current level.
+	/// </summary>
 	void Start() {
 
 		TogglePause (false);
 		ShowStartingMenu ();
 	}
 
-
+	/// <summary>	
+	/// Frequently called by unity engine.
+	/// 
+	/// Listens if the escape button was pressed and toggles the PauseMenu accordingly.
+	/// </summary>
 	void Update(){
 		
 		if (Input.GetKeyDown(KeyCode.Escape)) {
@@ -56,6 +75,9 @@ public class PauseMenu : SoftwareBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// Starts the game in the current level with TCP request to server.
+	/// </summary>
 	public void StartGame() {
 
 		startText.GetComponent<Text> ().text = "WAIT...";
@@ -66,6 +88,9 @@ public class PauseMenu : SoftwareBehaviour {
 			new string[] { "startTheGame", UserStatics.SessionId.ToString() });
 	}
 		
+	/// <summary>
+	/// Pauses the current game with TCP request to server.
+	/// </summary>
 	public void Pause() {
 		if (gameHasStarted) {
 			SoftwareModel.netwRout.TCPRequest (
@@ -76,6 +101,9 @@ public class PauseMenu : SoftwareBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// Resumes the current game with TCP request to server.
+	/// </summary>
 	public void Resume() {
 		if (gameHasStarted) {
 			SoftwareModel.netwRout.TCPRequest (
@@ -86,6 +114,9 @@ public class PauseMenu : SoftwareBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// Response to an ended level, by showing part of PauseMenu, that allows to quit the level in game.
+	/// </summary>
 	public void End() {
 
 		if (gameHasStarted) {
@@ -94,6 +125,9 @@ public class PauseMenu : SoftwareBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// Quits the level in game with TCP request.
+	/// </summary>
 	public void Quit() {
 
 		SoftwareModel.netwRout.TCPRequest(
@@ -102,11 +136,21 @@ public class PauseMenu : SoftwareBehaviour {
 			new string[] { "leaveSession", UserStatics.IdSelf.ToString() });
 	}
 
+	/// <summary>
+	/// Sends user back to MainMenu.
+	/// 
+	/// CALLBACK FUNCTION FOR TCP-Request.
+	/// </summary>
+	/// <param name="response">Response.</param>
 	private void StartMainMenu(string[][] response){
 		Time.timeScale = 1f;
 		SceneManager.LoadScene ("Menu");
 	}
 
+	/// <summary>
+	/// Toggles the PauseMenu on and off according to given bool.
+	/// </summary>
+	/// <param name="stop">If set to <c>true</c> stop.</param>
 	public void TogglePause(bool stop) {
 
 		pauseMenuCanvas.SetActive(stop);
@@ -114,9 +158,12 @@ public class PauseMenu : SoftwareBehaviour {
 		GamePaused = stop;
 
 		ToggleAnimators (stop);
-		//Time.timeScale = (stop ? 0f : 1f);        erstmal nur rausgenommen weil die Couruntines damit ebenfalls gestopt werden, müssen eine andere Loesung finden
 	}
 
+	/// <summary>
+	/// Toggles the animators, which stops and restarts animation of users.
+	/// </summary>
+	/// <param name="stop">If set to <c>true</c> stop.</param>
 	private void ToggleAnimators(bool stop) {
 
 		foreach (Animator anim in animators) {
@@ -124,6 +171,9 @@ public class PauseMenu : SoftwareBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// Shows the starting menu.
+	/// </summary>
 	public void ShowStartingMenu() {
 
 		startText.GetComponent<Text> ().text = "Start Game";

@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Handles the behaviour of the door, that is blocking the FinisherPlate.
+/// </summary>
 public class DoorScript : SoftwareBehaviour {
 
 	/// <summary>

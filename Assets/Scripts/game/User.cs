@@ -3,13 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Serves as player controller.
+/// Controlls the user gameObject.
 /// </summary>
 public class User : GObject {
 
+	// GameObject parameters:
 	public GameObject userInfo, shortsMesh;
 	private Animator animator;
 
+	/// <summary>
+	/// Tells, if this User is played by oneself.
+	/// </summary>
 	private bool isPlayed = false;
 	public bool IsPlayed {
 		get { return isPlayed; }
@@ -18,6 +22,11 @@ public class User : GObject {
 			userInfo.SetActive (false);
 		}
 	}
+	/// <summary>
+	/// Attached GameObject, when this user picks up an object.
+	/// 
+	/// Not implemented in this stage of development.
+	/// </summary>
 	private GObject objectHeld;
 	public GObject ObjectHeld {
 		get { return objectHeld; }
@@ -32,11 +41,18 @@ public class User : GObject {
 		set { user_ref = value; }
 	}
 
-	//private int id = -1;
+	/// <summary>
+	/// Fetches identifier of one self for object internal processes.
+	/// </summary>
+	/// <value>The identifier.</value>
 	private int Id {
 		get { return UserStatics.IdSelf; }
 	}
 
+	/// <summary>
+	/// Fetches username of one self for object internal processes.
+	/// </summary>
+	/// <value>The identifier.</value>
 	private string UserName {
 		get { return UserStatics.GetUserName (Id); }
 	}
@@ -78,6 +94,14 @@ public class User : GObject {
 		}
 	}
 
+	/// <summary>
+	/// Updates the GameObject of not self played users.
+	/// To avoid stuttering switch between animations, 
+	/// there is a differentiation between short lasting
+	/// and longer lasting movement patterns, that call
+	/// different speeds of animation accordingly.
+	/// </summary>
+	/// <param name="upData">Up data.</param>
 	public void UpdateUser (UpdateData upData) {
 
 		bool xEquals = (int)(rigTrans.position.x * 10) == (int)(upData.Position.x * 10);
@@ -87,19 +111,9 @@ public class User : GObject {
 
 		if (!(xEquals && yEquals && zEquals)) {
 
-			// TODO Insert logic to differentiate between moving forward and backwards.
-			// Vector3  direction = (upData.Position - rigPos).normalized - upData.Rotation.normalized;
-			// Debug.Log ("direction: x=" + direction.x + "   y=" + direction.y + "   z=" + direction.z);
-			// Debug.Log("Quaternion.Euler (upData.Rotation) = " + Quaternion.Euler (upData.Rotation) + "     upData.Position.normalized = " + upData.Position.normalized);
-			// Debug.Log("upData.Rotation.y = " + upData.Rotation.y + "     upData.Position.normalized = " + upData.Position.normalized);
-
+			// TODO Logic to differentiate wheter the user is running or walking; forward, sideward or backward.
 			float alpha = Mathf.Rad2Deg * Mathf.Atan ( direction.x / direction.z ) - 90f;
-			/*Debug.Log ( 
-				"direction.z = " + direction.z + 
-				"     direction.x = " + direction.x + 
-				"     upData.Rotation.y = " + upData.Rotation.y + 
-				"     alpha = " + alpha + 
-				"     diff = " + (upData.Rotation.y - alpha));*/
+
 
 			animator.SetFloat ("Forward", 1f);
 			standCounter = 0;
@@ -124,6 +138,12 @@ public class User : GObject {
 		rigTrans.localRotation = Quaternion.Euler (upData.Rotation);
 	}
 
+	/// <summary>
+	/// Called by unity engine, when gameObject is instantiated.
+	/// 
+	/// stores the Animator object to avoid unneeded Method calls,
+	/// which improves performance.
+	/// </summary>
 	void Start() {
 		animator = GetComponent<Animator> ();
 	}
@@ -136,8 +156,14 @@ public class User : GObject {
 		shortsMesh.GetComponent<Renderer> ().material.color = color;
 	}
 
+	/// <summary>
+	/// Frequently called by unity engine.
+	/// 
+	/// Handles movement of self played user.
+	/// Also only reacts, if game is currently running.
+	/// </summary>
 	protected new void Update(){
-
+		// Allow base class to store RigidBody.
 		base.Update ();
 		if (isPlayed && SoftwareModel.GameRunning) {
 			// Capture movement:

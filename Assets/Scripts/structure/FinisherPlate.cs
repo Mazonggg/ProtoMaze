@@ -7,7 +7,7 @@ using UnityEngine;
 /// that complete the session, when stepped on.
 /// </summary>
 public class FinisherPlate : GObject {
-
+	// GameObject parameters:
 	public GameObject lightInactive, lightActive;
 
 	/// <summary>

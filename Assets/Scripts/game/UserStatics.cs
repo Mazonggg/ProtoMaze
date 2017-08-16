@@ -10,19 +10,33 @@ using UnityEngine;
 /// a local database.
 /// </summary>
 public class UserStatics {
-
+	/// <summary>
+	/// Holds the id of one self as in database.
+	/// </summary>
 	private static int idSelf = -1;
 	public static int IdSelf {
 		get { return idSelf; }
 		set { idSelf = value; }
 	}
+	/// <summary>
+	/// Holds the username of one self as in database.
+	/// </summary>
 	private static string nameSelf = "";
 	public static string NameSelf {
 		get { return nameSelf; }
 		set { nameSelf = value; }
 	}
-	private static int[] userIds = {-1, -1, -1, -1};
+	/// <summary>
+	/// The ids of all users in current game session as in database.
+	/// </summary>
+	private static int[] userIds = {-1, -1, -1, -1};	
+	/// <summary>
+	/// The usernames of all users in current game session as in database.
+	/// </summary>
 	private static string[] userNames = {"", "", "", ""};
+	/// <summary>
+	/// The user-refs of all users in current game session as in database.
+	/// </summary>
 	private static string[] userRefs = {"", "", "", ""};
 
 	/// <summary>
@@ -116,7 +130,7 @@ public class UserStatics {
 	}
 
 	/// <summary>
-	/// Id of session in database.
+	/// Id of session as in database.
 	/// </summary>
 	private static int sessionId = 0;
 	public static int SessionId {

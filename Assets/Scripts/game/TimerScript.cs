@@ -3,14 +3,26 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// Script that controlls the display of time left in game level.
+/// </summary>
 public class TimerScript : SoftwareBehaviour {
 
+	/// <summary>
+	/// Returns rest time for general requests.
+	/// </summary>
 	private static int restTime;
 	public static int RestTime {
 		get { return restTime; }
 	}
 
-    // Update is called once per frame
+	/// <summary>	
+	/// Frequently called by unity engine.
+	/// 
+	/// Sets the timer according to given time.
+	/// If time has elapsed, it tells the socket, to stop working.
+	/// -> Thus functions as a pseudo callback, which circumvents timing issues.
+	/// </summary>
     public bool SetTimer (int time) {
 		restTime = time;
 		if (time > 0) {
@@ -20,10 +32,7 @@ public class TimerScript : SoftwareBehaviour {
 		} else {
 			gameObject.GetComponent<Text> ().text = "Time over";        
 			gameObject.GetComponent<Text> ().color = Constants.secondaryColor;
-            Debug.Log("Softwaremodel:" + SoftwareModel);
-            Debug.Log("1SocketOb from SoftwareM:" + SoftwareModel.SocketObj);
             SoftwareModel.SocketObj.KillSocket();
-            Debug.Log("2SocketOb from SoftwareM:" + SoftwareModel.SocketObj);
             return false;
         }
 

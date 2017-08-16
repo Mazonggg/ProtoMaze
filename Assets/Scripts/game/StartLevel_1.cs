@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// LevelBehaviour script for the first level in the game.
+/// Override functions are explained in base class.
+/// </summary>
 public class StartLevel_1 : LevelBehaviour {
 
 	public override string SceneName () {
@@ -55,15 +59,6 @@ public class StartLevel_1 : LevelBehaviour {
 		}
 	}
 
-	protected override void FinishLevel() {
-
-	}
-
-	/// <summary>
-	/// Gets the timer, that determines how much time 
-	/// the user have to complete the level, before timeout.
-	/// </summary>
-	/// <returns>The timer.</returns>
 	protected override int GetTimer () {
 		
 		return 60;

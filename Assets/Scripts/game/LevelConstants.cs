@@ -2,8 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Holds constant data concerning LevelBehaviours.
+/// </summary>
 public sealed class LevelConstants : SoftwareBehaviour{
 
+	/// <summary>
+	/// List of all levels contained in the game.
+	/// 
+	/// HOOK for adding new levels to the game.
+	/// </summary>
 	private static LevelBehaviour[] allLevels = new LevelBehaviour [] {
 		new StartLevel_1 (),
 		new StartLevel_2 ()

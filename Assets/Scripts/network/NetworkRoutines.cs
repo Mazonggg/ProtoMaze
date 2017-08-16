@@ -7,54 +7,55 @@ using UnityEngine.Networking;
 using System.Net;
 using System;
 
-/// Contains function Md5Sum() from 'http://wiki.unity3d.com/index.php?title=MD5 opened on: 2017_04_26'.
+/// <summary>
+/// Handles all TCP related communication with the server.
+/// /// Contains function Md5Sum() from 'http://wiki.unity3d.com/index.php?title=MD5 opened on: 2017_04_26'.
 /// Convention for responses:
-/// response: "type=HINT&userId=5&userName=Protofox";
+/// </summary>
 public class NetworkRoutines : SoftwareBehaviour {
-
+	// Flags for Server communication:
 	private static string serverError = "Error:";
 	private static string serverResponse = "Response:";
 	private static string serverHint = "Hint:";
 	private static string serverRequest = "http://h2678361.stratoserver.net/scripts/";
 	private static string connScript = "connection.php";
 	private static string upstreamSocket = "upstream.php";
-
+	/// <summary>
+	/// The connection used throughout this script.
+	/// </summary>
 	private UnityWebRequest connection;
 
-
 	/// <summary>
-	/// Searches for own IP-Addres in DNS host entries.
-	/// Picks last entry found, while in development.
+	/// Empty function used as callback dummy, if no response to TCP request needed.
 	/// </summary>
-	/// <returns>The local I pv4.</returns>
-	internal static string GetLocalIPv4() {
-
-		IPHostEntry ipHost = Dns.GetHostEntry(Dns.GetHostName());
-		IPAddress[] ipAddr = ipHost.AddressList;
-
-		string ip = "";
-		for(int i = 0; i < ipAddr.Length; i++) {
-			ip = ipAddr[i].ToString();
-		}
-
-		return ip;
-	}
-
+	/// <param name="response">Response.</param>
 	public static void EmptyCallback(string[][] response){}
 
+	/// <summary>
+	/// Sends the request to start the Socket for this game.
+	/// </summary>
+	/// <param name="callback">Callback.</param>
+	/// <param name="keys">Keys.</param>
+	/// <param name="values">Values.</param>
 	public void UDPRequest(Action<string[][]> callback, string[] keys, string[] values) {
 
 		string request = SerializeRequest (serverRequest + upstreamSocket, GenerateParams(keys, values));
 		StartCoroutine (MakeRequest(callback, request, false));
 	}
 
+	/// <summary>
+	/// Predefined method to start TCP requests to server.
+	/// </summary>
+	/// <param name="callback">Callback.</param>
+	/// <param name="keys">Keys.</param>
+	/// <param name="values">Values.</param>
 	public void TCPRequest(Action<string[][]> callback, string[] keys, string[] values) {
         
 		string request = SerializeRequest (serverRequest + connScript, GenerateParams(keys, values));
 		StartCoroutine (MakeRequest(callback, request, true));
 	}
 	/// <summary>
-	/// Processes and returns all tcp-requests to server.
+	/// Processes and returns all TCP requests to server.
 	/// </summary>
 	/// <returns>The request.</returns>
 	/// <param name="param">Parameter.</param>
@@ -73,6 +74,7 @@ public class NetworkRoutines : SoftwareBehaviour {
 					if (response.StartsWith (serverError)) {
 						Debug.Log (serverError + response);
 					} else {
+						// Callback function:
 						callback (CompileResponse (response));
 					}
 				}
@@ -81,7 +83,6 @@ public class NetworkRoutines : SoftwareBehaviour {
 			}
 		}
 	}
-
 
     /// <summary>
     /// Gets the type of the response, by extracting the respective part of it.
@@ -94,6 +95,11 @@ public class NetworkRoutines : SoftwareBehaviour {
         return step1.Split('&')[0];
     }
 
+	/// <summary>
+	/// Simply serializes parts of a request into one string.
+	/// </summary>
+	/// <returns>The request.</returns>
+	/// <param name="parts">Parts.</param>
 	private string SerializeRequest(params string[] parts) {
 		string serial = "";
 
@@ -104,6 +110,12 @@ public class NetworkRoutines : SoftwareBehaviour {
 		return serial;
 	}
 
+	/// <summary>
+	/// Compiles the response string into two dimensional string array,
+	/// according to game internal conventions.
+	/// </summary>
+	/// <returns>The response.</returns>
+	/// <param name="response">Response.</param>
     private string[][] CompileResponse(string response) {
 
         string[] pairs = response.Split('&');
@@ -132,11 +144,11 @@ public class NetworkRoutines : SoftwareBehaviour {
         gen = gen.Substring(0, gen.Length - 1);
 		return gen;
 	}
-
-
-
+		
 	/// <summary>
 	/// Applies Md5s encryption to the string.
+	/// 
+	/// Logic comes from 'http://wiki.unity3d.com/index.php?title=MD5 opened on: 2017_04_26'.
 	/// </summary>
 	/// <returns>The sum.</returns>
 	/// <param name="strToEncrypt">String to encrypt.</param>
