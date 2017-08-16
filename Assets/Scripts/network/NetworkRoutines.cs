@@ -60,11 +60,8 @@ public class NetworkRoutines : SoftwareBehaviour {
 	/// <returns>The request.</returns>
 	/// <param name="param">Parameter.</param>
 	private IEnumerator MakeRequest(Action<string[][]> callback, string request, bool waitForResponse) {
-
 		using (connection = UnityWebRequest.Get (request)) {
-
 			yield return connection.Send ();
-
 			try {
 				if (connection.isError) {
 					Debug.Log (serverError + connection.error);
@@ -103,8 +100,7 @@ public class NetworkRoutines : SoftwareBehaviour {
 	private string SerializeRequest(params string[] parts) {
 		string serial = "";
 
-		foreach (string part in parts) {
-            
+		foreach (string part in parts) { 
 			serial += part;
 		}
 		return serial;
@@ -140,7 +136,6 @@ public class NetworkRoutines : SoftwareBehaviour {
 		for (int i = 0; i < keys.Length; i++) {
 			gen += keys[i] + "=" + values[i] + "&";
 		}
-
         gen = gen.Substring(0, gen.Length - 1);
 		return gen;
 	}

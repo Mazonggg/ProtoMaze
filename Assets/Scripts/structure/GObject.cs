@@ -22,12 +22,12 @@ public class GObject : SoftwareBehaviour {
 	/// <summary>
 	/// Store the RigidBody, to avoid unnecassary references to other objects during play.
 	/// </summary>
-	protected Rigidbody rigBody;
-	protected Transform rigTrans;
 	public bool Active {
 		get { return active; }
 		set { active = value; }
 	}
+	protected Rigidbody rigBody;
+	protected Transform rigTrans;
 	/// <summary>
 	/// true, if changed since last time data where referenced.
 	/// </summary>
